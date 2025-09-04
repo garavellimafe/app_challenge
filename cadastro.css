@@ -1,0 +1,91 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background-color: #e74c3c;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    background-color: #fff;
+    padding: 30px 40px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    max-width: 450px;
+    width: 90%;
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.logo img {
+    max-width: 120px;
+}
+
+.info_pessoa, .info_casa {
+    margin-bottom: 20px;
+}
+
+.info_pessoa h3, .info_casa h3 {
+    margin-bottom: 15px;
+    color: #333;
+    font-size: 18px;
+    text-align: center;
+}
+
+.pessoa_item, .casa_item {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px;
+}
+
+label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+input {
+    padding: 10px;
+    border: 1px solid #bbb;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    transition: 0.3s;
+}
+
+input:focus {
+    border-color: #e74c3c;
+    box-shadow: 0 0 5px rgba(231, 76, 60, 0.5);
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: not-allowed;
+    background-color: #7f8c8d;
+    color: white;
+    transition: 0.3s;
+}
+
+button:enabled {
+    cursor: pointer;
+    background-color: #7f8c8d;
+}
+
+button:enabled:hover {
+    background-color: #e74c3c;
+}
