@@ -8,10 +8,13 @@
 <body>
     <div class="container">
         <div class="logo">
-            <a href="pginicial.html"><img src="goodwe.webp" alt="Logo da Goodwe"></a>
+            <a href="pginicial.html">
+                <img src="goodwe.webp" alt="Logo da Goodwe">
+            </a>
         </div>
 
         <form id="formCadastro">
+            <!-- Informações Pessoais -->
             <div class="info_pessoa">
                 <h3>Informações Pessoais</h3>
                 <div class="pessoa_item">
@@ -32,6 +35,26 @@
                 </div>
             </div>
 
+            <!-- Senhas -->
+            <div class="info_senha">
+                <h3>Segurança</h3>
+                <div class="senha_item">
+                    <label>Senha</label>
+                    <input type="password" placeholder="Digite sua senha" required>
+                    <ul class="senha-requisitos">
+                        <li id="req-min">Mínimo de 8 caracteres</li>
+                        <li id="req-letra">Deve conter letras (A-Z)</li>
+                        <li id="req-num">Deve conter números (0-9)</li>
+                        <li id="req-especial">Deve conter caracteres especiais (ex: @, #, !)</li>
+                    </ul>
+                </div>
+                <div class="senha_item">
+                    <label>Confirmar Senha</label>
+                    <input type="password" placeholder="Confirme sua senha" required>
+                </div>
+            </div>
+
+            <!-- Endereço -->
             <div class="info_casa">
                 <h3>Endereço</h3>
                 <div class="casa_item">

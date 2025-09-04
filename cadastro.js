@@ -60,10 +60,31 @@ function validarCidade(cidade) {
     return cidadesBR.some(c => c.toLowerCase() === cidade.toLowerCase());
 }
 
+function validarSenha(senha) {
+    const regex = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+    return regex.test(senha);
+}
+
+// Validação visual dos requisitos da senha
+const senhaInput = document.querySelector("input[placeholder='Digite sua senha']");
+const reqMin = document.getElementById("req-min");
+const reqLetra = document.getElementById("req-letra");
+const reqNum = document.getElementById("req-num");
+const reqEspecial = document.getElementById("req-especial");
+
+senhaInput.addEventListener("input", () => {
+    const senha = senhaInput.value;
+
+    reqMin.classList.toggle("cumprido", senha.length >= 8);
+    reqLetra.classList.toggle("cumprido", /[a-zA-Z]/.test(senha));
+    reqNum.classList.toggle("cumprido", /\d/.test(senha));
+    reqEspecial.classList.toggle("cumprido", /[\W_]/.test(senha));
+});
+
 form.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    const idade = parseInt(form.querySelector("input[type='number']").value);
+    const idade = parseInt(form.querySelector("input[placeholder='Digite sua idade']").value);
     if (idade < 18) {
         alert("Cadastro inválido: você precisa ter 18 anos ou mais.");
         return;
@@ -96,6 +117,19 @@ form.addEventListener("submit", (e) => {
     const cidade = form.querySelector("input[placeholder='Digite sua cidade']").value.trim();
     if (!validarCidade(cidade)) {
         alert("Cadastro inválido: insira uma cidade brasileira válida.");
+        return;
+    }
+
+    const senha = senhaInput.value.trim();
+    const confirmarSenha = form.querySelector("input[placeholder='Confirme sua senha']").value.trim();
+
+    if (!validarSenha(senha)) {
+        alert("Cadastro inválido: a senha deve ter no mínimo 8 caracteres, incluindo letras, números e caracteres especiais.");
+        return;
+    }
+
+    if (senha !== confirmarSenha) {
+        alert("Cadastro inválido: as senhas não coincidem.");
         return;
     }
 
