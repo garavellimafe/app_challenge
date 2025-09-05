@@ -1,0 +1,215 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+}
+
+/* Topo */
+.topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background-color: #f5f5f5;
+}
+
+.logo img {
+    height: 50px;
+}
+
+.cabecalho {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-grow: 1;
+    margin-left: 20px;
+}
+
+.cabecalho_tema {
+    font-size: 20px;
+    font-weight: bold;
+    color: gray;
+}
+
+.cabecalho_itens {
+    display: flex;
+    gap: 20px;
+}
+
+.cabecalho_item {
+    font-size: 16px;
+    color: gray;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.cabecalho_item:hover {
+    color: #c62828; /* vermelho ao passar o mouse */
+}
+
+/* Barra superior */
+.barra {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #eaeaea;
+    gap: 20px;
+}
+
+.barra_item1 {
+    flex-grow: 1;
+}
+
+.campo_pesquisa {
+    padding: 12px 16px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    background-color: #eaeaea;
+    color: #333;
+}
+
+/* Botão Adicionar Item */
+.botao_adicionar {
+    padding: 10px 20px;
+    font-size: 14px;
+    background-color: #c62828;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    white-space: nowrap;
+}
+
+.botao_adicionar:hover {
+    background-color: #b71c1c;
+}
+
+/* Área de seleção */
+.area_selecao {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.itens_de_selecao {
+    font-size: 16px;
+    color: #444;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+/* Grid de itens selecionados */
+#gridSelecionados {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    width: 100%;
+    max-width: 800px;
+}
+
+/* Estilo dos itens selecionados */
+.item_selecionado {
+    padding: 8px 12px;
+    background-color: #c62828;
+    color: #fff;
+    border-radius: 4px;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* Modal */
+.barra_item2_interface {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Conteúdo do modal */
+.modal_conteudo {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 300px;
+    max-width: 900px;
+    text-align: center;
+}
+
+/* Botões de categoria */
+.grupo_classificacoes {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.classificacao_dicionaveis {
+    padding: 10px 16px;
+    font-size: 16px;
+    background-color: #c62828;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.classificacao_dicionaveis:hover {
+    background-color: #b71c1c;
+}
+
+/* Listas de itens em 3 colunas */
+.lista_adicionavel {
+    display: none;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+/* Item adicionável */
+.item_adicionavel1 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background-color: #f5f5f5;
+    border-radius: 6px;
+    cursor: pointer;
+    height: 100%;
+    transition: background-color 0.3s ease;
+}
+
+.item_adicionavel1:hover {
+    background-color: #e0e0e0;
+}
+
+/* Botão fechar */
+#fecharModal {
+    margin-top: 10px;
+    padding: 8px 16px;
+    background-color: #ccc;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}

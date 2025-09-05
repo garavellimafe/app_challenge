@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Configuração de Aparelhos</title>
+    <link rel="stylesheet" href="config_itens.css">
+</head>
+<body>
+    <div class="topo">
+        <div class="logo">
+            <a href="pginicial.html">
+                <img src="goodwe.webp" alt="Logo da Goodwe">
+            </a>
+        </div>
+        <div class="cabecalho">
+            <div class="cabecalho_tema">Cadastro de Aparelhos</div>
+            <div class="cabecalho_itens">
+                <div class="cabecalho_item">Assistente Virtual</div>
+                <div class="cabecalho_item">Importar</div>
+                <div class="cabecalho_item">Exportar</div>
+                <div class="cabecalho_item" id="btnLimpar">Limpar</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="barra">
+        <div class="barra_item1">
+            <input type="text" placeholder="Buscar item..." class="campo_pesquisa" id="campoPesquisa">
+        </div>
+        <button class="botao_adicionar" id="botaoAdicionar">Adicionar Item</button>
+    </div>
+
+    <div class="area_selecao">
+        <div class="itens_de_selecao">Itens selecionados:</div>
+        <div class="grid_selecionados" id="gridSelecionados"></div>
+    </div>
+
+    <div class="barra_item2_interface" id="interfaceModal">
+        <div class="modal_conteudo">
+            <div class="grupo_classificacoes">
+                <button class="classificacao_dicionaveis" id="btnResidenciais">Residenciais</button>
+                <button class="classificacao_dicionaveis" id="btnCI">C&I</button>
+                <button class="classificacao_dicionaveis" id="btnBaterias">Baterias</button>
+                <button class="classificacao_dicionaveis" id="btnMonitoramento">Monitoramento</button>
+                <button class="classificacao_dicionaveis" id="btnVeicular">Veiculares</button>
+                <button class="classificacao_dicionaveis" id="btnBIPV">BIPV</button>
+                <button class="classificacao_dicionaveis" id="btnSolo">No Solo</button>
+                <button class="classificacao_dicionaveis" id="btnArmazenamento">Armazenamento</button>
+            </div>
+
+            <!-- Listas de produtos (mantidas como estavam) -->
+            <div class="lista_adicionavel" id="listaResidenciais">
+                <div class="item_adicionavel1">XS G3 Series</div>
+                <div class="item_adicionavel1">DNS G3 Series</div>
+                <div class="item_adicionavel1">DNS G4 Series</div>
+                <div class="item_adicionavel1">MS G3 Series</div>
+                <div class="item_adicionavel1">MS G4 Series</div>
+                <div class="item_adicionavel1">MIS Series</div>
+                <div class="item_adicionavel1">SDT G3.1 Series</div>
+            </div>
+
+            <div class="lista_adicionavel" id="listaCI">
+                <div class="item_adicionavel1">SMT G2 Series</div>
+                <div class="item_adicionavel1">GT Series</div>
+                <div class="item_adicionavel1">SDT G3 Series (3 MPPTs)</div>
+                <div class="item_adicionavel1">SDT G3 Series (4 MPPTs)</div>
+                <div class="item_adicionavel1">LV-SMT Series</div>
+                <div class="item_adicionavel1">MT Series</div>
+                <div class="item_adicionavel1">HT Series</div>
+            </div>
+
+            <div class="lista_adicionavel" id="listaBaterias">
+                <div class="item_adicionavel1">Lynx Home U</div>
+                <div class="item_adicionavel1">Lynx U G3</div>
+                <div class="item_adicionavel1">Lynx A G3</div>
+                <div class="item_adicionavel1">Lynx F G2</div>
+                <div class="item_adicionavel1">Lynx C</div>
+                <div class="item_adicionavel1">Lynx D</div>
+            </div>
+
+            <div class="lista_adicionavel" id="listaMonitoramento">
+                <div class="item_adicionavel1">SEMS+ Plataforma</div>
+                <div class="item_adicionavel1">Medidor GMK110</div>
+                <div class="item_adicionavel1">Medidor GM330</div>
+                <div class="item_adicionavel1">HomeKit 1000</div>
+                <div class="item_adicionavel1">Wi-Fi BOX / KIT</div>
+                <div class="item_adicionavel1">SEC1000 / SEC1000S</div>
+            </div>
+
+            <div class="lista_adicionavel" id="listaVeicular">
+                <div class="item_adicionavel1">GW7K-HCA</div>
+                <div class="item_adicionavel1">GW11K-HCA</div>
+                <div class="item_adicionavel1">GW22K-HCA</div>
+            </div>
+
+            <div class="lista_adicionavel" id="listaBIPV">
+                <div class="item_adicionavel1">Galaxy Series</div>
+                <div class="item_adicionavel1">Sunshine Series</div>
+                <div class="item_adicionavel1">Polaris Series</div>
+                <div class="item_adicionavel1">Stellar Series</div>
+            </div>
+
+            <div class="lista_adicionavel" id="listaSolo">
+                <div class="item_adicionavel1">HT 225/250kW</div>
+                <div class="item_adicionavel1">UT 250/320/350kW</div>
+                <div class="item_adicionavel1">Estação 3.5/5/7MVA</div>
+                <div class="item_adicionavel1">Estação 9.152MVA</div>
+            </div>
+
+            <div class="lista_adicionavel" id="listaArmazenamento">
+                <div class="item_adicionavel1">ES G2 Series</div>
+                <div class="item_adicionavel1">ET Series</div>
+                <div class="item_adicionavel1">ET 50K Series</div>
+                <div class="item_adicionavel1">ETC Series</div>
+                <div class="item_adicionavel1">SBP G2 Series</div>
+                <div class="item_adicionavel1">BT Series</div>
+                <div class="item_adicionavel1">BTC Series</div>
+            </div>
+
+            <button id="fecharModal">Adicionar</button>
+        </div>
+    </div>
+
+    <script src="config_itens.js"></script>
+</body>
+</html>
