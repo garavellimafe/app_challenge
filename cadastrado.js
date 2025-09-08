@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         // Redireciona se tudo estiver ok
-        window.location.href = "goodweinicial.html";
+        window.location.href = "config_itens.html";
     });
 
     // Função para validar CPF

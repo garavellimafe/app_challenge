@@ -50,7 +50,7 @@ body {
 }
 
 .cabecalho_item:hover {
-    color: #c62828; /* vermelho ao passar o mouse */
+    color: #c62828;
 }
 
 /* Barra superior */
@@ -112,7 +112,7 @@ body {
 /* Grid de itens selecionados */
 #gridSelecionados {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 12px;
     width: 100%;
     max-width: 800px;
@@ -140,6 +140,7 @@ body {
     z-index: 1000;
     justify-content: center;
     align-items: center;
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 /* Conteúdo do modal */
@@ -204,18 +205,23 @@ body {
     background-color: #e0e0e0;
 }
 
-/* Botão fechar */
+/* Botão fechar/adicionar */
 #fecharModal {
     margin-top: 10px;
-    padding: 8px 16px;
-    background-color: #ccc;
+    padding: 10px 18px;
+    background-color: #c62828;
+    color: #fff;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
+    font-size: 15px;
 }
 
+#fecharModal:hover {
+    background-color: #b71c1c;
+}
 
-#chatmodal
+/* Chat */
 .chat-modal {
     display: none;
     position: fixed;
@@ -229,6 +235,7 @@ body {
     flex-direction: column;
     overflow: hidden;
     border: 2px solid #c62828;
+    transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .chat-header {

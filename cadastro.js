@@ -133,5 +133,5 @@ form.addEventListener("submit", (e) => {
         return;
     }
 
-    window.location.href = "goodweinicial.html";
+    window.location.href = "config_itens.html";
 });
