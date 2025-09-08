@@ -48,7 +48,7 @@
                 <button class="classificacao_dicionaveis" id="btnArmazenamento">Armazenamento</button>
             </div>
 
-            <!-- Listas de produtos (mantidas como estavam) -->
+            <!-- Listas de produtos -->
             <div class="lista_adicionavel" id="listaResidenciais">
                 <div class="item_adicionavel1">XS G3 Series</div>
                 <div class="item_adicionavel1">DNS G3 Series</div>
@@ -58,7 +58,6 @@
                 <div class="item_adicionavel1">MIS Series</div>
                 <div class="item_adicionavel1">SDT G3.1 Series</div>
             </div>
-
             <div class="lista_adicionavel" id="listaCI">
                 <div class="item_adicionavel1">SMT G2 Series</div>
                 <div class="item_adicionavel1">GT Series</div>
@@ -68,7 +67,6 @@
                 <div class="item_adicionavel1">MT Series</div>
                 <div class="item_adicionavel1">HT Series</div>
             </div>
-
             <div class="lista_adicionavel" id="listaBaterias">
                 <div class="item_adicionavel1">Lynx Home U</div>
                 <div class="item_adicionavel1">Lynx U G3</div>
@@ -77,7 +75,6 @@
                 <div class="item_adicionavel1">Lynx C</div>
                 <div class="item_adicionavel1">Lynx D</div>
             </div>
-
             <div class="lista_adicionavel" id="listaMonitoramento">
                 <div class="item_adicionavel1">SEMS+ Plataforma</div>
                 <div class="item_adicionavel1">Medidor GMK110</div>
@@ -86,27 +83,23 @@
                 <div class="item_adicionavel1">Wi-Fi BOX / KIT</div>
                 <div class="item_adicionavel1">SEC1000 / SEC1000S</div>
             </div>
-
             <div class="lista_adicionavel" id="listaVeicular">
                 <div class="item_adicionavel1">GW7K-HCA</div>
                 <div class="item_adicionavel1">GW11K-HCA</div>
                 <div class="item_adicionavel1">GW22K-HCA</div>
             </div>
-
             <div class="lista_adicionavel" id="listaBIPV">
                 <div class="item_adicionavel1">Galaxy Series</div>
                 <div class="item_adicionavel1">Sunshine Series</div>
                 <div class="item_adicionavel1">Polaris Series</div>
                 <div class="item_adicionavel1">Stellar Series</div>
             </div>
-
             <div class="lista_adicionavel" id="listaSolo">
                 <div class="item_adicionavel1">HT 225/250kW</div>
                 <div class="item_adicionavel1">UT 250/320/350kW</div>
                 <div class="item_adicionavel1">Estação 3.5/5/7MVA</div>
                 <div class="item_adicionavel1">Estação 9.152MVA</div>
             </div>
-
             <div class="lista_adicionavel" id="listaArmazenamento">
                 <div class="item_adicionavel1">ES G2 Series</div>
                 <div class="item_adicionavel1">ET Series</div>
@@ -116,11 +109,23 @@
                 <div class="item_adicionavel1">BT Series</div>
                 <div class="item_adicionavel1">BTC Series</div>
             </div>
-
             <button id="fecharModal">Adicionar</button>
         </div>
     </div>
 
+    <!-- Chat Modal Assistente Virtual -->
+    <div class="chat-modal" id="chatModal">
+        <div class="chat-header">
+            Assistente Virtual
+            <span class="chat-close" id="chatClose">&times;</span>
+        </div>
+        <div class="chat-body" id="chatBody"></div>
+        <div class="chat-footer">
+            <input type="text" id="chatInput" placeholder="Digite sua mensagem...">
+            <button id="chatSend">Enviar</button>
+        </div>
+    </div>
     <script src="config_itens.js"></script>
+    
 </body>
 </html>

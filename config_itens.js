@@ -103,3 +103,60 @@ if (campoPesquisa && gridSelecionados) {
         });
     });
 }
+// ...Código original acima...
+
+// --- Assistente Virtual (chat) ---
+document.addEventListener("DOMContentLoaded", function () {
+    const chatModal = document.getElementById("chatModal");
+    const chatClose = document.getElementById("chatClose");
+    const chatInput = document.getElementById("chatInput");
+    const chatSend = document.getElementById("chatSend");
+    const chatBody = document.getElementById("chatBody");
+
+    // Abrir chat ao clicar em "Assistente Virtual"
+    document.querySelectorAll('.cabecalho_item').forEach(item => {
+        if (item.textContent.trim().toLowerCase() === 'assistente virtual') {
+            item.addEventListener('click', () => {
+                chatModal.style.display = "flex";
+                chatBody.innerHTML = '<div class="msg-ia">Olá! Sou seu assistente virtual. Como posso ajudar?</div>';
+            });
+        }
+    });
+
+    // Fechar chat
+    if (chatClose) {
+        chatClose.addEventListener('click', () => {
+            chatModal.style.display = "none";
+        });
+    }
+
+    // Enviar mensagem
+    function enviarMensagem() {
+        const msg = chatInput.value.trim();
+        if (!msg) return;
+        chatBody.innerHTML += `<div class="msg-usuario">${msg}</div>`;
+        chatInput.value = '';
+        chatBody.scrollTop = chatBody.scrollHeight;
+
+        // Chama backend
+        fetch('http://localhost:3080/api/assistente', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ mensagem: msg })
+        })
+        .then(r => r.json())
+        .then(data => {
+            chatBody.innerHTML += `<div class="msg-ia">${data.resposta}</div>`;
+            chatBody.scrollTop = chatBody.scrollHeight;
+        })
+        .catch(() => {
+            chatBody.innerHTML += `<div class="msg-ia">[Erro de conexão com o assistente]</div>`;
+            chatBody.scrollTop = chatBody.scrollHeight;
+        });
+    }
+
+    if (chatSend) chatSend.addEventListener('click', enviarMensagem);
+    if (chatInput) chatInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') enviarMensagem();
+    });
+});
