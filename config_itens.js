@@ -6,6 +6,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const gridSelecionados = document.getElementById("gridSelecionados");
     const btnLimpar = document.getElementById("btnLimpar");
     const campoPesquisa = document.getElementById("campoPesquisa");
+    const btnExportar = document.getElementById("btnExportar");
+    const btnImportar = document.getElementById("btnImportar");
+    const inputImportar = document.getElementById("inputImportar");
 
     // MODAL DE NOMEAÇÃO
     const modalNomeacao = document.getElementById("modalNomeacao");
@@ -194,6 +197,64 @@ document.addEventListener("DOMContentLoaded", function () {
             const texto = item.textContent.toLowerCase();
             item.style.display = texto.includes(termo) ? "" : "none";
         });
+    });
+
+    // EXPORTAR ITENS SELECIONADOS EM JSON
+    btnExportar?.addEventListener("click", () => {
+        const itens = Array.from(gridSelecionados.querySelectorAll(".item_selecionado")).map(item => {
+            const nome = item.querySelector("span")?.textContent || "";
+            const img = item.querySelector("img")?.getAttribute("src") || null;
+            const ativo = item.getAttribute("data-ativo") === "true";
+            const prioridade = item.getAttribute("data-prioridade") === "true";
+            return { nome, img, ativo, prioridade };
+        });
+        const blob = new Blob([JSON.stringify(itens, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "itens_selecionados.json";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    });
+
+    // IMPORTAR ITENS SELECIONADOS DE JSON
+    btnImportar?.addEventListener("click", () => {
+        inputImportar.click();
+    });
+
+    inputImportar?.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            try {
+                const itens = JSON.parse(evt.target.result);
+                gridSelecionados.innerHTML = "";
+                itens.forEach(item => {
+                    const novoItem = document.createElement("div");
+                    novoItem.classList.add("item_selecionado");
+                    novoItem.setAttribute("data-ativo", item.ativo);
+                    novoItem.setAttribute("data-prioridade", item.prioridade);
+                    novoItem.title = "Clique para editar";
+                    if (item.img) {
+                        const img = document.createElement("img");
+                        img.src = item.img;
+                        img.alt = item.nome;
+                        novoItem.appendChild(img);
+                    }
+                    const texto = document.createElement("span");
+                    texto.textContent = item.nome;
+                    novoItem.appendChild(texto);
+                    gridSelecionados.appendChild(novoItem);
+                });
+            } catch (err) {
+                alert("Arquivo JSON inválido ou formato incompatível.");
+            }
+        };
+        reader.readAsText(file);
+        inputImportar.value = "";
     });
 
     // CHAT
