@@ -480,3 +480,14 @@ input:checked + .slider:before {
 #chatSend:hover {
   background: #b71c1c;
 }
+
+#btnAssistenteNomeacao {
+  background: #c62828;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 15px;
+  margin-bottom: 10px;
+}

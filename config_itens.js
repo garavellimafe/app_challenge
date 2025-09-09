@@ -20,6 +20,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const statusTexto = document.getElementById("statusTexto");
     const sliderPrioridade = document.getElementById("sliderPrioridade");
     const prioridadeTexto = document.getElementById("prioridadeTexto");
+    const btnAssistenteNomeacao = document.getElementById("btnAssistenteNomeacao");
+    const chatModal = document.getElementById("chatModal");
+    const chatBody = document.getElementById("chatBody");
 
     let itemSelecionadoParaEdicao = null;
     let imagemSelecionadaTemp = null;
@@ -258,11 +261,9 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // CHAT
-    const chatModal = document.getElementById("chatModal");
     const chatClose = document.getElementById("chatClose");
     const chatInput = document.getElementById("chatInput");
     const chatSend = document.getElementById("chatSend");
-    const chatBody = document.getElementById("chatBody");
 
     document.querySelectorAll(".cabecalho_item").forEach(item => {
         if (item.textContent.trim().toLowerCase() === "assistente virtual") {
@@ -272,6 +273,13 @@ document.addEventListener("DOMContentLoaded", function () {
                     chatBody.innerHTML = '<div class="msg-ia">Olá! Sou seu assistente virtual. Como posso ajudar?</div>';
                 }
             });
+        }
+    });
+
+    btnAssistenteNomeacao?.addEventListener("click", () => {
+        chatModal.style.display = "flex";
+        if (chatBody.innerHTML.trim() === "") {
+            chatBody.innerHTML = '<div class="msg-ia">Olá! Sou seu assistente virtual. Como posso ajudar?</div>';
         }
     });
 
