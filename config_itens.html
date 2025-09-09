@@ -50,13 +50,34 @@
 
             <!-- Listas de produtos -->
             <div class="lista_adicionavel" id="listaResidenciais">
-                <div class="item_adicionavel1">XS G3 Series</div>
-                <div class="item_adicionavel1">DNS G3 Series</div>
-                <div class="item_adicionavel1">DNS G4 Series</div>
-                <div class="item_adicionavel1">MS G3 Series</div>
-                <div class="item_adicionavel1">MS G4 Series</div>
-                <div class="item_adicionavel1">MIS Series</div>
-                <div class="item_adicionavel1">SDT G3.1 Series</div>
+                <div class="item_adicionavel1">
+                    <div class="imagens_itensadd"><img src="XS-G3.png"></div> 
+                    <span>XS G3 Series</span>
+                </div>
+                <div class="item_adicionavel1">
+                    <div class="imagens_itensadd"><img src="DNS-G3.png"></div>
+                        <span>DNS G3 Series</span>
+                </div>
+                <div class="item_adicionavel1">
+                    <div class="imagens_itensadd"><img src="DNS-G4.png">S</div> 
+                    <span>DNS G4 Series</span>
+                </div>
+                <div class="item_adicionavel1">
+                    <div class="imagens_itensadd"><img src="MS-G3.png"></div> 
+                    <span>MS G3 Series</span>
+                </div>
+                <div class="item_adicionavel1">
+                    <div class="imagens_itensadd"><img src="MS-G4.png"></div> 
+                    <span>MS G4 Series</span>
+                </div>
+                <div class="item_adicionavel1">
+                    <div class="imagens_itensadd"><img src="MIS.png"></div> 
+                    <span>MIS Series</span>
+                </div>
+                <div class="item_adicionavel1">
+                    <div class="imagens_itensadd"><img src="STDG3.1.png"></div> 
+                    <span>SDT G3.1 Series</span>
+                </div>
             </div>
             <div class="lista_adicionavel" id="listaCI">
                 <div class="item_adicionavel1">SMT G2 Series</div>
@@ -84,9 +105,14 @@
                 <div class="item_adicionavel1">SEC1000 / SEC1000S</div>
             </div>
             <div class="lista_adicionavel" id="listaVeicular">
-                <div class="item_adicionavel1">GW7K-HCA</div>
-                <div class="item_adicionavel1">GW11K-HCA</div>
-                <div class="item_adicionavel1">GW22K-HCA</div>
+                <div class="item_adicionavel1">
+                    <div class="imagens_itensadd"><img src="HCA7.png"></div> 
+                    <span>GW7K-HCA</span>
+                </div>
+                <div class="item_adicionavel1">
+                    <div class="imagens_itensadd"><img src="HCA11.png"></div> 
+                    <span>GW11K/22K-HCA</span>
+                </div>
             </div>
             <div class="lista_adicionavel" id="listaBIPV">
                 <div class="item_adicionavel1">Galaxy Series</div>
@@ -112,6 +138,33 @@
             <button id="fecharModal">Adicionar</button>
         </div>
     </div>
+
+    <!-- Modal de Nomeação de Item -->
+<div class="modal_nomeacao" id="modalNomeacao">
+  <div class="modal_nomeacao_conteudo">
+    <img id="imagemPreview" src="" alt="Imagem do item selecionado">
+    <input type="text" id="inputNomePersonalizado" placeholder="Digite um nome para este item">
+    <div class="slider_ativo botoes_nomeacao">
+      <label class="switch">
+        <input type="checkbox" class="sliderAtivo" id="sliderAtivo">
+        <span class="slider"></span>
+      </label>
+      <span class="statusTexto" id="statusTexto">Ativado</span>
+
+      <label class="switch">
+        <input type="checkbox" class="sliderPrioridade" id="sliderPrioridade">
+        <span class="slider"></span>
+      </label>
+      <span class="prioridadeTexto" id="prioridadeTexto">Prioritário</span>
+    </div>
+
+    <div class="botoes_nomeacao">
+      <button id="confirmarNomeacao">Confirmar</button>
+      <button id="removerItemSelecionado">Remover</button>
+    </div>
+
+  </div>
+</div>
 
     <!-- Chat Modal Assistente Virtual -->
     <div class="chat-modal" id="chatModal">

@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // --------- ELEMENTOS PRINCIPAIS ---------
+    // ELEMENTOS PRINCIPAIS
     const modal = document.getElementById("interfaceModal");
     const botaoAdicionar = document.getElementById("botaoAdicionar");
     const fecharModal = document.getElementById("fecharModal");
@@ -7,7 +7,22 @@ document.addEventListener("DOMContentLoaded", function () {
     const btnLimpar = document.getElementById("btnLimpar");
     const campoPesquisa = document.getElementById("campoPesquisa");
 
-    // --------- MAPA DE CATEGORIAS ---------
+    // MODAL DE NOMEAÇÃO
+    const modalNomeacao = document.getElementById("modalNomeacao");
+    const imagemPreview = document.getElementById("imagemPreview");
+    const inputNomePersonalizado = document.getElementById("inputNomePersonalizado");
+    const confirmarNomeacao = document.getElementById("confirmarNomeacao");
+    const removerItemSelecionado = document.getElementById("removerItemSelecionado");
+    const sliderAtivo = document.getElementById("sliderAtivo");
+    const statusTexto = document.getElementById("statusTexto");
+    const sliderPrioridade = document.getElementById("sliderPrioridade");
+    const prioridadeTexto = document.getElementById("prioridadeTexto");
+
+    let itemSelecionadoParaEdicao = null;
+    let imagemSelecionadaTemp = null;
+    let nomeOriginalTemp = "";
+
+    // CATEGORIAS
     const categorias = {
         btnResidenciais: "listaResidenciais",
         btnCI: "listaCI",
@@ -19,7 +34,27 @@ document.addEventListener("DOMContentLoaded", function () {
         btnArmazenamento: "listaArmazenamento"
     };
 
-    // --------- FUNÇÕES DE MODAL ---------
+    // ABRIR MODAL PRINCIPAL
+    botaoAdicionar?.addEventListener("click", () => {
+        modal.style.display = "flex";
+        mostrarLista("listaResidenciais");
+    });
+
+    // FECHAR MODAL PRINCIPAL
+    fecharModal?.addEventListener("click", () => {
+        modal.style.display = "none";
+    });
+
+    // MOSTRAR LISTA DE CATEGORIA
+    Object.keys(categorias).forEach(btnId => {
+        const btn = document.getElementById(btnId);
+        if (btn) {
+            btn.addEventListener("click", () => {
+                mostrarLista(categorias[btnId]);
+            });
+        }
+    });
+
     function mostrarLista(id) {
         esconderTodasAsListas();
         const lista = document.getElementById(id);
@@ -33,142 +68,168 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Abrir modal (padrão: Residenciais)
-    if (botaoAdicionar && modal) {
-        botaoAdicionar.addEventListener("click", () => {
-            modal.style.display = "flex";
-            mostrarLista("listaResidenciais");
-        });
-    }
-
-    // Fechar modal no botão "Adicionar"
-    if (fecharModal && modal) {
-        fecharModal.addEventListener("click", () => {
-            modal.style.display = "none";
-            esconderTodasAsListas();
-        });
-    }
-
-    // Fechar modal clicando fora do conteúdo
-    window.addEventListener("click", (e) => {
-        if (e.target === modal) {
-            modal.style.display = "none";
-            esconderTodasAsListas();
-        }
-    });
-
-    // Alternar listas pelas categorias
-    Object.entries(categorias).forEach(([btnId, listaId]) => {
-        const botao = document.getElementById(btnId);
-        if (botao) {
-            botao.addEventListener("click", () => mostrarLista(listaId));
-        }
-    });
-
-    // --------- ITENS SELECIONADOS ---------
-    function jaSelecionado(nome) {
-        return Array.from(gridSelecionados.querySelectorAll(".item_selecionado"))
-            .some(div => div.textContent.trim().toLowerCase() === nome.trim().toLowerCase());
-    }
-
-    function adicionarItemSelecionado(nomeItem) {
-        if (!nomeItem) return;
-        if (jaSelecionado(nomeItem)) return; // evita duplicados
-
+    // ADICIONAR ITEM SELECIONADO
+    function adicionarItemSelecionado(nomeItem, imagemSrc, ativo) {
         const novoItem = document.createElement("div");
         novoItem.classList.add("item_selecionado");
-        novoItem.textContent = nomeItem;
-        // dica de UX: remover ao clicar
-        novoItem.title = "Clique para remover";
+        novoItem.setAttribute("data-ativo", ativo);
+        novoItem.title = "Clique para editar";
+
+        if (imagemSrc) {
+            const img = document.createElement("img");
+            img.src = imagemSrc;
+            img.alt = nomeItem;
+            novoItem.appendChild(img);
+        }
+
+        const texto = document.createElement("span");
+        texto.textContent = nomeItem;
+        novoItem.appendChild(texto);
+
         gridSelecionados.appendChild(novoItem);
     }
 
-    // Delegação de evento: clicar em qualquer item das listas adicionáveis
-    Object.values(categorias).forEach(listaId => {
-        const lista = document.getElementById(listaId);
-        if (!lista) return;
+    // CLIQUE EM ITEM ADICIONÁVEL
+    document.querySelectorAll(".lista_adicionavel").forEach(lista => {
         lista.addEventListener("click", (e) => {
             const item = e.target.closest(".item_adicionavel1");
             if (!item) return;
-            const nome = item.textContent.trim();
-            adicionarItemSelecionado(nome);
+
+            const span = item.querySelector("span");
+            nomeOriginalTemp = span ? span.textContent.trim() : item.textContent.trim();
+
+            const imgTag = item.querySelector("img");
+            imagemSelecionadaTemp = imgTag ? imgTag.getAttribute("src") : null;
+
+            sliderAtivo.checked = false;
+            sliderPrioridade.checked = false;
+
+            imagemPreview.src = imagemSelecionadaTemp || "";
+            inputNomePersonalizado.value = nomeOriginalTemp;
+            itemSelecionadoParaEdicao = null;
+
             modal.style.display = "none";
-            esconderTodasAsListas();
+            modalNomeacao.style.display = "flex";
         });
     });
 
-    // Remover item selecionado ao clicar nele
-    if (gridSelecionados) {
-        gridSelecionados.addEventListener("click", (e) => {
-            const item = e.target.closest(".item_selecionado");
-            if (item) item.remove();
-        });
-    }
+    // CLIQUE EM ITEM SELECIONADO
+    gridSelecionados?.addEventListener("click", (e) => {
+        const item = e.target.closest(".item_selecionado");
+        if (!item) return;
 
-    // Limpar todos os itens selecionados
-    if (btnLimpar && gridSelecionados) {
-        btnLimpar.addEventListener("click", () => {
-            gridSelecionados.innerHTML = "";
-            if (campoPesquisa) campoPesquisa.value = "";
-        });
-    }
+        const span = item.querySelector("span");
+        nomeOriginalTemp = span ? span.textContent.trim() : item.textContent.trim();
 
-    // --------- BUSCA NOS ITENS SELECIONADOS ---------
-    if (campoPesquisa && gridSelecionados) {
-        campoPesquisa.addEventListener("input", () => {
-            const termo = campoPesquisa.value.toLowerCase();
-            const itens = gridSelecionados.querySelectorAll(".item_selecionado");
-            itens.forEach(item => {
-                const texto = item.textContent.toLowerCase();
-                item.style.display = texto.includes(termo) ? "block" : "none";
-            });
-        });
-    }
+        const imgTag = item.querySelector("img");
+        imagemSelecionadaTemp = imgTag ? imgTag.getAttribute("src") : null;
 
-    // --------- CHAT / ASSISTENTE VIRTUAL ---------
+        const ativo = item.getAttribute("data-ativo") === "true";
+        sliderAtivo.checked = ativo;
+
+        const prioridade = item.getAttribute("data-prioridade") === "true";
+        sliderPrioridade.checked = prioridade;
+
+        imagemPreview.src = imagemSelecionadaTemp || "";
+        inputNomePersonalizado.value = nomeOriginalTemp;
+        itemSelecionadoParaEdicao = item;
+
+        modalNomeacao.style.display = "flex";
+    });
+
+    // CONFIRMAR NOMEAÇÃO
+    confirmarNomeacao?.addEventListener("click", () => {
+        const nomeFinal = inputNomePersonalizado.value.trim();
+        const ativo = sliderAtivo.checked;
+        const prioridade = sliderPrioridade.checked;
+        if (!nomeFinal) return;
+
+        if (itemSelecionadoParaEdicao) {
+            const span = itemSelecionadoParaEdicao.querySelector("span");
+            if (span) span.textContent = nomeFinal;
+
+            itemSelecionadoParaEdicao.setAttribute("data-ativo", ativo);
+            itemSelecionadoParaEdicao.setAttribute("data-prioridade", prioridade);
+            itemSelecionadoParaEdicao = null;
+        } else {
+            const novoItem = document.createElement("div");
+            novoItem.classList.add("item_selecionado");
+            novoItem.setAttribute("data-ativo", ativo);
+            novoItem.setAttribute("data-prioridade", prioridade);
+            novoItem.title = "Clique para editar";
+            if (imagemSelecionadaTemp) {
+                const img = document.createElement("img");
+                img.src = imagemSelecionadaTemp;
+                img.alt = nomeFinal;
+                novoItem.appendChild(img);
+            }
+            const texto = document.createElement("span");
+            texto.textContent = nomeFinal;
+            novoItem.appendChild(texto);
+            gridSelecionados.appendChild(novoItem);
+        }
+        modalNomeacao.style.display = "none";
+    });
+
+    // REMOVER ITEM
+    removerItemSelecionado?.addEventListener("click", () => {
+        if (itemSelecionadoParaEdicao) {
+            itemSelecionadoParaEdicao.remove();
+            itemSelecionadoParaEdicao = null;
+        }
+        modalNomeacao.style.display = "none";
+    });
+
+    // LIMPAR TODOS
+    btnLimpar?.addEventListener("click", () => {
+        gridSelecionados.innerHTML = "";
+        campoPesquisa.value = "";
+    });
+
+    // BUSCA
+    campoPesquisa?.addEventListener("input", () => {
+        const termo = campoPesquisa.value.toLowerCase();
+        const itens = gridSelecionados.querySelectorAll(".item_selecionado");
+        itens.forEach(item => {
+            const texto = item.textContent.toLowerCase();
+            item.style.display = texto.includes(termo) ? "" : "none";
+        });
+    });
+
+    // CHAT
     const chatModal = document.getElementById("chatModal");
     const chatClose = document.getElementById("chatClose");
     const chatInput = document.getElementById("chatInput");
     const chatSend = document.getElementById("chatSend");
     const chatBody = document.getElementById("chatBody");
 
-    // Abrir o chat ao clicar em "Assistente Virtual"
     document.querySelectorAll(".cabecalho_item").forEach(item => {
         if (item.textContent.trim().toLowerCase() === "assistente virtual") {
             item.addEventListener("click", () => {
-                if (chatModal) chatModal.style.display = "flex";
-                if (chatBody && chatBody.innerHTML.trim() === "") {
+                chatModal.style.display = "flex";
+                if (chatBody.innerHTML.trim() === "") {
                     chatBody.innerHTML = '<div class="msg-ia">Olá! Sou seu assistente virtual. Como posso ajudar?</div>';
                 }
             });
         }
     });
 
-    // Fechar o chat
-    if (chatClose && chatModal) {
-        chatClose.addEventListener("click", () => {
-            chatModal.style.display = "none";
-        });
-    }
+    chatClose?.addEventListener("click", () => {
+        chatModal.style.display = "none";
+    });
 
-    // Enviar mensagem no chat
     function enviarMensagem() {
-        if (!chatInput || !chatBody) return;
-
         const msg = chatInput.value.trim();
         if (!msg) return;
 
-        // adiciona mensagem do usuário
         chatBody.innerHTML += `<div class="msg-usuario">${msg}</div>`;
         chatInput.value = "";
         chatBody.scrollTop = chatBody.scrollHeight;
 
-        // indicador de carregamento
         const loadingId = "loading-" + Date.now();
         chatBody.innerHTML += `<div class="msg-ia" id="${loadingId}">Digitando...</div>`;
         chatBody.scrollTop = chatBody.scrollHeight;
 
-        // Chamada ao backend
         fetch("http://localhost:3080/api/assistente", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -181,23 +242,19 @@ document.addEventListener("DOMContentLoaded", function () {
             } catch {
                 data = { resposta: "[Resposta inválida do servidor]" };
             }
-            const loader = document.getElementById(loadingId);
-            if (loader) loader.remove();
-            chatBody.innerHTML += `<div class="msg-ia">${(data && data.resposta) ? data.resposta : "[Sem resposta]"}</div>`;
+            document.getElementById(loadingId)?.remove();
+            chatBody.innerHTML += `<div class="msg-ia">${data.resposta || "[Sem resposta]"}</div>`;
             chatBody.scrollTop = chatBody.scrollHeight;
         })
         .catch(() => {
-            const loader = document.getElementById(loadingId);
-            if (loader) loader.remove();
+            document.getElementById(loadingId)?.remove();
             chatBody.innerHTML += `<div class="msg-ia">[Erro de conexão com o assistente]</div>`;
             chatBody.scrollTop = chatBody.scrollHeight;
         });
     }
 
-    if (chatSend) chatSend.addEventListener("click", enviarMensagem);
-    if (chatInput) {
-        chatInput.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") enviarMensagem();
-        });
-    }
+    chatSend?.addEventListener("click", enviarMensagem);
+    chatInput?.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") enviarMensagem();
+    });
 });

@@ -1,318 +1,481 @@
 /* Reset básico */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    font-family: Arial, sans-serif;
-    background-color: #fff;
+  font-family: Arial, sans-serif;
+  background-color: #fff;
 }
 
 /* Topo */
 .topo {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 20px;
-    background-color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background-color: #f5f5f5;
 }
 
 .logo img {
-    height: 50px;
+  height: 50px;
 }
 
 .cabecalho {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-grow: 1;
-    margin-left: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-grow: 1;
+  margin-left: 20px;
 }
 
 .cabecalho_tema {
-    font-size: 20px;
-    font-weight: bold;
-    color: gray;
+  font-size: 20px;
+  font-weight: bold;
+  color: gray;
 }
 
 .cabecalho_itens {
-    display: flex;
-    gap: 20px;
+  display: flex;
+  gap: 20px;
 }
 
 .cabecalho_item {
-    font-size: 16px;
-    color: gray;
-    cursor: pointer;
-    transition: color 0.3s ease;
+  font-size: 16px;
+  color: gray;
+  cursor: pointer;
+  transition: color 0.3s ease;
 }
 
 .cabecalho_item:hover {
-    color: #c62828;
+  color: #c62828;
 }
 
 /* Barra superior */
 .barra {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-    background-color: #eaeaea;
-    gap: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: #eaeaea;
+  gap: 20px;
 }
 
 .barra_item1 {
-    flex-grow: 1;
+  flex-grow: 1;
 }
 
 .campo_pesquisa {
-    padding: 12px 16px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    width: 100%;
-    background-color: #eaeaea;
-    color: #333;
+  padding: 12px 16px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  background-color: #eaeaea;
+  color: #333;
 }
 
 /* Botão Adicionar Item */
 .botao_adicionar {
-    padding: 10px 20px;
-    font-size: 14px;
-    background-color: #c62828;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    white-space: nowrap;
+  padding: 10px 20px;
+  font-size: 14px;
+  background-color: #c62828;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
 }
 
 .botao_adicionar:hover {
-    background-color: #b71c1c;
+  background-color: #b71c1c;
 }
 
 /* Área de seleção */
 .area_selecao {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fafafa;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  max-height: 2000px;       /* altura máxima da área */
+  overflow-y: auto;        /* scroll vertical na área inteira */
+  width: 100%;
 }
 
 .itens_de_selecao {
-    font-size: 16px;
-    color: #444;
-    font-weight: 500;
-    margin-bottom: 10px;
+  font-size: 16px;
+  color: #444;
+  font-weight: 500;
+  margin-bottom: 10px;
 }
 
-/* Grid de itens selecionados */
+/* Grid de itens selecionados (3 colunas) */
 #gridSelecionados {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 12px;
-    width: 100%;
-    max-width: 800px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 colunas fixas */
+  gap: 12px;
+  width: 100%;
+  padding: 10px;
 }
 
-/* Estilo dos itens selecionados */
 .item_selecionado {
-    padding: 8px 12px;
-    background-color: #c62828;
-    color: #fff;
-    border-radius: 4px;
-    font-size: 14px;
-    text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  background-color: #c62828;
+  color: #fff;
+  border-radius: 6px;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+  min-height: 60px;           /* altura mínima fixa */
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.item_selecionado img {
+  width: 40px;
+  height: auto;
+  border-radius: 4px;
+}
+
+.item_selecionado:hover {
+  transform: scale(1.05);
 }
 
 /* Modal */
 .barra_item2_interface {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.4);
-    z-index: 1000;
-    justify-content: center;
-    align-items: center;
-    transition: opacity 0.3s ease, transform 0.3s ease;
+  display: none; /* controlado via JS */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 /* Conteúdo do modal */
 .modal_conteudo {
-    background-color: #fff;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    min-width: 300px;
-    max-width: 900px;
-    text-align: center;
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 300px;
+  max-width: 900px;
+  text-align: center;
 }
 
 /* Botões de categoria */
 .grupo_classificacoes {
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-    flex-wrap: wrap;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
 .classificacao_dicionaveis {
-    padding: 10px 16px;
-    font-size: 16px;
-    background-color: #c62828;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  padding: 10px 16px;
+  font-size: 16px;
+  background-color: #c62828;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .classificacao_dicionaveis:hover {
-    background-color: #b71c1c;
+  background-color: #b71c1c;
 }
 
-/* Listas de itens em 3 colunas */
+/* Listas de itens em 3 colunas (apresentação no modal) */
 .lista_adicionavel {
-    display: none;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    margin-bottom: 20px;
+  display: none; /* mostrado via JS */
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
 }
 
-/* Item adicionável */
+/* Item adicionável (cartão da lista) */
 .item_adicionavel1 {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px;
-    background-color: #f5f5f5;
-    border-radius: 6px;
-    cursor: pointer;
-    height: 100%;
-    transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  background-color: #C0C0C0; /* cinza visível */
+  border-radius: 6px;
+  cursor: pointer;
+  height: 100%;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  border: 1px solid #ddd;
 }
 
 .item_adicionavel1:hover {
-    background-color: #e0e0e0;
+  background-color: #c62828; /* vermelho */
+  color: #fff;
+}
+
+.item_adicionavel1:hover span {
+  color: #fff;
+}
+
+/* Imagem do item (ao lado do texto) */
+.imagens_itensadd img {
+  width: 50px;
+  height: auto;
+  object-fit: contain;
+  border-radius: 4px; /* opcional */
 }
 
 /* Botão fechar/adicionar */
 #fecharModal {
-    margin-top: 10px;
-    padding: 10px 18px;
-    background-color: #c62828;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 15px;
+  margin-top: 10px;
+  padding: 10px 18px;
+  background-color: #c62828;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
 }
 
 #fecharModal:hover {
-    background-color: #b71c1c;
+  background-color: #b71c1c;
+}
+
+.modal_nomeacao {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+  z-index: 1500;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal_nomeacao_conteudo {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  max-width: 400px;
+  width: 90%;
+}
+
+.modal_nomeacao_conteudo img {
+  width: 100px;
+  height: auto;
+  border-radius: 6px;
+}
+
+#inputNomePersonalizado {
+  padding: 10px;
+  font-size: 16px;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+/* Botões lado a lado */
+.botoes_nomeacao {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  justify-content: center;
+}
+
+#confirmarNomeacao,
+#removerItemSelecionado {
+  padding: 10px 20px;
+  font-size: 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Botão confirmar */
+#confirmarNomeacao {
+  background-color: #c62828;
+  color: #fff;
+}
+
+#confirmarNomeacao:hover {
+  background-color: #b71c1c;
+}
+
+/* Botão remover */
+#removerItemSelecionado {
+  background-color: #777;
+  color: #fff;
+}
+
+#removerItemSelecionado:hover {
+  background-color: #555;
+}
+.slider_ativo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  border-radius: 24px;
+  transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #c62828;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
 }
 
 /* Chat */
 .chat-modal {
-    display: none;
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 350px;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-    z-index: 2000;
-    flex-direction: column;
-    overflow: hidden;
-    border: 2px solid #c62828;
-    transition: opacity 0.3s ease, transform 0.3s ease;
+  display: none; /* controlado via JS */
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 350px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  z-index: 2000;
+  flex-direction: column;
+  overflow: hidden;
+  border: 2px solid #c62828;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .chat-header {
-    background: #c62828;
-    color: #fff;
-    padding: 14px;
-    font-weight: bold;
-    font-size: 17px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  background: #c62828;
+  color: #fff;
+  padding: 14px;
+  font-weight: bold;
+  font-size: 17px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .chat-close {
-    cursor: pointer;
-    font-size: 20px;
+  cursor: pointer;
+  font-size: 20px;
 }
 
 .chat-body {
-    background: #fafafa;
-    padding: 14px;
-    min-height: 180px;
-    max-height: 260px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  background: #fafafa;
+  padding: 14px;
+  min-height: 180px;
+  max-height: 260px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .msg-usuario {
-    align-self: flex-end;
-    background: #c62828;
-    color: #fff;
-    padding: 7px 13px;
-    border-radius: 15px 15px 2px 15px;
-    max-width: 85%;
-    font-size: 15px;
+  align-self: flex-end;
+  background: #c62828;
+  color: #fff;
+  padding: 7px 13px;
+  border-radius: 15px 15px 2px 15px;
+  max-width: 85%;
+  font-size: 15px;
 }
 
 .msg-ia {
-    align-self: flex-start;
-    background: #e0e0e0;
-    color: #222;
-    padding: 7px 13px;
-    border-radius: 15px 15px 15px 2px;
-    max-width: 85%;
-    font-size: 15px;
+  align-self: flex-start;
+  background: #e0e0e0;
+  color: #222;
+  padding: 7px 13px;
+  border-radius: 15px 15px 15px 2px;
+  max-width: 85%;
+  font-size: 15px;
 }
 
 .chat-footer {
-    display: flex;
-    border-top: 1px solid #eee;
-    padding: 10px;
-    background: #fff;
-    gap: 7px;
+  display: flex;
+  border-top: 1px solid #eee;
+  padding: 10px;
+  background: #fff;
+  gap: 7px;
 }
 
 #chatInput {
-    flex: 1;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 8px;
-    font-size: 15px;
-    outline: none;
+  flex: 1;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 8px;
+  font-size: 15px;
+  outline: none;
 }
 
 #chatSend {
-    background: #c62828;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 8px 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.2s;
+  background: #c62828;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
 }
 
 #chatSend:hover {
-    background: #b71c1c;
+  background: #b71c1c;
 }
