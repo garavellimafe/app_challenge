@@ -126,18 +126,58 @@ body {
 
 .item_selecionado {
   display: flex;
-  align-items: center;
   gap: 8px;
   padding: 10px;
-  background-color: #C0C0C0;
-  color: rgba(0,0,0);;
+  background-color: #e4e3e3;
+  color: rgba(0,0,0);
   border-radius: 6px;
   font-size: 14px;
   text-align: left;
   cursor: pointer;
-  min-height: 60px;           /* altura mínima fixa */
+  min-height: 80px;           /* aumentado para acomodar os switches */
   box-sizing: border-box;
   overflow: hidden;
+}
+
+.item_selecionado img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.item_content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.switch_container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.switch_row {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Aumentado de 4px para 8px */
+  justify-content: space-between;
+  width: 110px; /* Largura fixa para manter alinhamento */
+}
+
+.statusTextoGrid,
+.prioridadeTextoGrid {
+  font-size: 11px;
+  color: #666;
+  min-width: 65px; /* Aumentado ligeiramente */
+  text-align: left;
+}
+
+.switch-inline {
+  margin: 0;
+  flex-shrink: 0; /* Impede que o switch encolha */
 }
 
 .item_selecionado img {
@@ -216,7 +256,7 @@ body {
   align-items: center;
   gap: 10px;
   padding: 12px;
-  background-color: #C0C0C0; /* cinza visível */
+  background-color: #e4e3e3; /* cinza visível */
   border-radius: 6px;
   cursor: pointer;
   height: 100%;
@@ -343,8 +383,8 @@ body {
 .switch {
   position: relative;
   display: inline-block;
-  width: 50px;
-  height: 24px;
+  width: 34px;  /* Reduzido de 50px */
+  height: 18px; /* Reduzido de 24px */
 }
 
 .switch input {
@@ -361,17 +401,17 @@ body {
   right: 0;
   bottom: 0;
   background-color: #ccc;
-  border-radius: 24px;
+  border-radius: 18px;
   transition: 0.4s;
 }
 
 .slider:before {
   position: absolute;
   content: "";
-  height: 18px;
-  width: 18px;
-  left: 3px;
-  bottom: 3px;
+  height: 14px;
+  width: 14px;
+  left: 2px;
+  bottom: 2px;
   background-color: white;
   border-radius: 50%;
   transition: 0.4s;
@@ -382,7 +422,7 @@ input:checked + .slider {
 }
 
 input:checked + .slider:before {
-  transform: translateX(26px);
+  transform: translateX(16px); /* Ajustado de 26px para 16px para manter dentro dos limites */
 }
 
 /* Chat */

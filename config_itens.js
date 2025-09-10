@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // ADICIONAR ITEM SELECIONADO
-    function adicionarItemSelecionado(nomeItem, imagemSrc, ativo) {
+    function adicionarItemSelecionado(nomeItem, imagemSrc, ativo, prioridade = false) {
         const novoItem = document.createElement("div");
         novoItem.classList.add("item_selecionado");
         novoItem.setAttribute("data-ativo", ativo);
@@ -88,10 +88,74 @@ document.addEventListener("DOMContentLoaded", function () {
             novoItem.appendChild(img);
         }
 
+        const contentDiv = document.createElement("div");
+        contentDiv.className = "item_content";
+        
         const texto = document.createElement("span");
         texto.textContent = nomeItem;
-        novoItem.appendChild(texto);
+        contentDiv.appendChild(texto);
+        novoItem.appendChild(contentDiv);
 
+        const switchContainer = document.createElement("div");
+        switchContainer.className = "switch_container";
+
+        // Adiciona o slider de ativo em uma row
+        const switchRowAtivo = document.createElement("div");
+        switchRowAtivo.className = "switch_row";
+        
+        const labelSwitchAtivo = document.createElement("label");
+        labelSwitchAtivo.className = "switch switch-inline";
+        const inputSwitchAtivo = document.createElement("input");
+        inputSwitchAtivo.type = "checkbox";
+        inputSwitchAtivo.className = "switchAtivoGrid";
+        inputSwitchAtivo.checked = ativo;
+        inputSwitchAtivo.addEventListener("change", function(e) {
+            novoItem.setAttribute("data-ativo", e.target.checked);
+        });
+        const spanSliderAtivo = document.createElement("span");
+        spanSliderAtivo.className = "slider";
+        labelSwitchAtivo.appendChild(inputSwitchAtivo);
+        labelSwitchAtivo.appendChild(spanSliderAtivo);
+        switchRowAtivo.appendChild(labelSwitchAtivo);
+
+        const statusTexto = document.createElement("span");
+        statusTexto.className = "statusTextoGrid";
+        statusTexto.textContent = inputSwitchAtivo.checked ? "Ativado" : "Desativado";
+        inputSwitchAtivo.addEventListener("change", function(e) {
+            statusTexto.textContent = e.target.checked ? "Ativado" : "Desativado";
+        });
+        switchRowAtivo.appendChild(statusTexto);
+        switchContainer.appendChild(switchRowAtivo);
+
+        // Adiciona o slider de prioritário em uma nova row
+        const switchRowPrioridade = document.createElement("div");
+        switchRowPrioridade.className = "switch_row";
+        
+        const labelSwitchPrioridade = document.createElement("label");
+        labelSwitchPrioridade.className = "switch switch-inline";
+        const inputSwitchPrioridade = document.createElement("input");
+        inputSwitchPrioridade.type = "checkbox";
+        inputSwitchPrioridade.className = "switchPrioridadeGrid";
+        inputSwitchPrioridade.checked = false; // padrão, pode ser alterado se necessário
+        inputSwitchPrioridade.addEventListener("change", function(e) {
+            novoItem.setAttribute("data-prioridade", e.target.checked);
+        });
+        const spanSliderPrioridade = document.createElement("span");
+        spanSliderPrioridade.className = "slider";
+        labelSwitchPrioridade.appendChild(inputSwitchPrioridade);
+        labelSwitchPrioridade.appendChild(spanSliderPrioridade);
+        switchRowPrioridade.appendChild(labelSwitchPrioridade);
+
+        const prioridadeTexto = document.createElement("span");
+        prioridadeTexto.className = "prioridadeTextoGrid";
+        prioridadeTexto.textContent = inputSwitchPrioridade.checked ? "Prioritário" : "Normal";
+        inputSwitchPrioridade.addEventListener("change", function(e) {
+            prioridadeTexto.textContent = e.target.checked ? "Prioritário" : "Normal";
+        });
+        switchRowPrioridade.appendChild(prioridadeTexto);
+        switchContainer.appendChild(switchRowPrioridade);
+
+        novoItem.appendChild(switchContainer);
         gridSelecionados.appendChild(novoItem);
     }
 
@@ -156,23 +220,62 @@ document.addEventListener("DOMContentLoaded", function () {
 
             itemSelecionadoParaEdicao.setAttribute("data-ativo", ativo);
             itemSelecionadoParaEdicao.setAttribute("data-prioridade", prioridade);
+
+            // Atualiza os sliders existentes ou adiciona novos
+            let switchAtivo = itemSelecionadoParaEdicao.querySelector(".switchAtivoGrid");
+            let statusTexto = itemSelecionadoParaEdicao.querySelector(".statusTextoGrid");
+            let switchPrioridade = itemSelecionadoParaEdicao.querySelector(".switchPrioridadeGrid");
+            let prioridadeTexto = itemSelecionadoParaEdicao.querySelector(".prioridadeTextoGrid");
+
+            if (!switchAtivo) {
+                // Adiciona o slider de ativo se não existir
+                const labelSwitchAtivo = document.createElement("label");
+                labelSwitchAtivo.className = "switch switch-inline";
+                const inputSwitchAtivo = document.createElement("input");
+                inputSwitchAtivo.type = "checkbox";
+                inputSwitchAtivo.className = "switchAtivoGrid";
+                inputSwitchAtivo.checked = ativo;
+                const spanSliderAtivo = document.createElement("span");
+                spanSliderAtivo.className = "slider";
+                labelSwitchAtivo.appendChild(inputSwitchAtivo);
+                labelSwitchAtivo.appendChild(spanSliderAtivo);
+                itemSelecionadoParaEdicao.appendChild(labelSwitchAtivo);
+
+                statusTexto = document.createElement("span");
+                statusTexto.className = "statusTextoGrid";
+                itemSelecionadoParaEdicao.appendChild(statusTexto);
+            } else {
+                switchAtivo.checked = ativo;
+            }
+
+            if (!switchPrioridade) {
+                // Adiciona o slider de prioridade se não existir
+                const labelSwitchPrioridade = document.createElement("label");
+                labelSwitchPrioridade.className = "switch switch-inline";
+                const inputSwitchPrioridade = document.createElement("input");
+                inputSwitchPrioridade.type = "checkbox";
+                inputSwitchPrioridade.className = "switchPrioridadeGrid";
+                inputSwitchPrioridade.checked = prioridade;
+                const spanSliderPrioridade = document.createElement("span");
+                spanSliderPrioridade.className = "slider";
+                labelSwitchPrioridade.appendChild(inputSwitchPrioridade);
+                labelSwitchPrioridade.appendChild(spanSliderPrioridade);
+                itemSelecionadoParaEdicao.appendChild(labelSwitchPrioridade);
+
+                prioridadeTexto = document.createElement("span");
+                prioridadeTexto.className = "prioridadeTextoGrid";
+                itemSelecionadoParaEdicao.appendChild(prioridadeTexto);
+            } else {
+                switchPrioridade.checked = prioridade;
+            }
+
+            // Atualiza os textos
+            statusTexto.textContent = ativo ? "Ativado" : "Desativado";
+            prioridadeTexto.textContent = prioridade ? "Prioritário" : "Normal";
+
             itemSelecionadoParaEdicao = null;
         } else {
-            const novoItem = document.createElement("div");
-            novoItem.classList.add("item_selecionado");
-            novoItem.setAttribute("data-ativo", ativo);
-            novoItem.setAttribute("data-prioridade", prioridade);
-            novoItem.title = "Clique para editar";
-            if (imagemSelecionadaTemp) {
-                const img = document.createElement("img");
-                img.src = imagemSelecionadaTemp;
-                img.alt = nomeFinal;
-                novoItem.appendChild(img);
-            }
-            const texto = document.createElement("span");
-            texto.textContent = nomeFinal;
-            novoItem.appendChild(texto);
-            gridSelecionados.appendChild(novoItem);
+            adicionarItemSelecionado(nomeFinal, imagemSelecionadaTemp, ativo, prioridade);
         }
         modalNomeacao.style.display = "none";
     });
