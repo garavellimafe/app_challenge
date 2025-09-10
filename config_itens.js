@@ -78,13 +78,18 @@ document.addEventListener("DOMContentLoaded", function () {
     function adicionarItemSelecionado(nomeItem, imagemSrc, ativo, prioridade = false) {
         const novoItem = document.createElement("div");
         novoItem.classList.add("item_selecionado");
-        novoItem.setAttribute("data-ativo", ativo);
+        novoItem.setAttribute("data-ativo", String(ativo)); // Garante que seja string
+        novoItem.setAttribute("data-prioridade", String(prioridade)); // Garante que seja string
         novoItem.title = "Clique para editar";
 
         if (imagemSrc) {
             const img = document.createElement("img");
             img.src = imagemSrc;
             img.alt = nomeItem;
+            // Adiciona um listener de erro para não adicionar imagens quebradas
+            img.onerror = function() {
+                this.remove(); // Remove o elemento img se a imagem não carregar
+            };
             novoItem.appendChild(img);
         }
 
@@ -136,7 +141,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const inputSwitchPrioridade = document.createElement("input");
         inputSwitchPrioridade.type = "checkbox";
         inputSwitchPrioridade.className = "switchPrioridadeGrid";
-        inputSwitchPrioridade.checked = false; // padrão, pode ser alterado se necessário
+        inputSwitchPrioridade.checked = prioridade; // Usa o valor passado
         inputSwitchPrioridade.addEventListener("change", function(e) {
             novoItem.setAttribute("data-prioridade", e.target.checked);
         });
@@ -363,6 +368,99 @@ document.addEventListener("DOMContentLoaded", function () {
         inputImportar.value = "";
     });
 
+    // FUNÇÃO PARA EXTRAIR ITENS DISPONÍVEIS DO MODAL
+    function getItensDisponiveis() {
+        const itens = [];
+        document.querySelectorAll(".item_adicionavel1").forEach(item => {
+            const span = item.querySelector("span");
+            if (span && span.textContent.trim()) {
+                itens.push(span.textContent.trim());
+            }
+        });
+        return itens;
+    }
+
+    // FUNÇÕES DE MANIPULAÇÃO DE ITENS PARA IA
+    function getItensAtuais() {
+        return Array.from(gridSelecionados.querySelectorAll(".item_selecionado")).map(item => {
+            return {
+                nome: item.querySelector("span")?.textContent || "",
+                ativo: item.getAttribute("data-ativo") === "true",
+                prioridade: item.getAttribute("data-prioridade") === "true",
+            };
+        });
+    }
+
+    function removerItemPeloNome(nome) {
+        const itemParaRemover = Array.from(gridSelecionados.querySelectorAll(".item_selecionado")).find(item => {
+            const span = item.querySelector("span");
+            return span && span.textContent.toLowerCase() === nome.toLowerCase();
+        });
+        if (itemParaRemover) {
+            itemParaRemover.remove();
+            console.log(`Item "${nome}" removido.`);
+        } else {
+            console.log(`Item "${nome}" não encontrado para remoção.`);
+        }
+    }
+
+    function atualizarItemPeloNome(nomeOriginal, novoNome, ativo, prioridade) {
+        const itemParaAtualizar = Array.from(gridSelecionados.querySelectorAll(".item_selecionado")).find(item => {
+            const span = item.querySelector("span");
+            return span && span.textContent.toLowerCase() === nomeOriginal.toLowerCase();
+        });
+
+        if (itemParaAtualizar) {
+            if (novoNome) {
+                const span = itemParaAtualizar.querySelector("span");
+                if (span) span.textContent = novoNome;
+            }
+            if (ativo !== undefined) {
+                itemParaAtualizar.setAttribute("data-ativo", ativo);
+                const switchAtivo = itemParaAtualizar.querySelector(".switchAtivoGrid");
+                const statusTexto = itemParaAtualizar.querySelector(".statusTextoGrid");
+                if (switchAtivo) switchAtivo.checked = ativo;
+                if (statusTexto) statusTexto.textContent = ativo ? "Ativado" : "Desativado";
+            }
+            if (prioridade !== undefined) {
+                itemParaAtualizar.setAttribute("data-prioridade", prioridade);
+                const switchPrioridade = itemParaAtualizar.querySelector(".switchPrioridadeGrid");
+                const prioridadeTexto = itemParaAtualizar.querySelector(".prioridadeTextoGrid");
+                if (switchPrioridade) switchPrioridade.checked = prioridade;
+                if (prioridadeTexto) prioridadeTexto.textContent = prioridade ? "Prioritário" : "Normal";
+            }
+            console.log(`Item "${nomeOriginal}" atualizado.`);
+        } else {
+            console.log(`Item "${nomeOriginal}" não encontrado para atualização.`);
+        }
+    }
+
+    function executarAcao(acao) {
+        const { funcao, argumentos } = acao;
+        console.log("Executando ação:", funcao, argumentos);
+
+        switch (funcao) {
+            case "adicionar_item":
+                // Tenta encontrar a imagem correspondente na lista de itens disponíveis
+                const itemOriginal = Array.from(document.querySelectorAll(".item_adicionavel1")).find(item => {
+                    const span = item.querySelector("span");
+                    return span && span.textContent.trim().toLowerCase() === argumentos.nome.toLowerCase();
+                });
+                const imagemSrc = itemOriginal ? itemOriginal.querySelector("img")?.src : null;
+
+                adicionarItemSelecionado(argumentos.nome, imagemSrc, argumentos.ativo || false, argumentos.prioridade || false);
+                break;
+            case "remover_item":
+                removerItemPeloNome(argumentos.nome);
+                break;
+            case "atualizar_item":
+                atualizarItemPeloNome(argumentos.nome_original, argumentos.novo_nome, argumentos.ativo, argumentos.prioridade);
+                break;
+            default:
+                console.warn(`Função desconhecida: ${funcao}`);
+        }
+    }
+
     // CHAT
     const chatClose = document.getElementById("chatClose");
     const chatInput = document.getElementById("chatInput");
@@ -402,26 +500,44 @@ document.addEventListener("DOMContentLoaded", function () {
         chatBody.innerHTML += `<div class="msg-ia" id="${loadingId}">Digitando...</div>`;
         chatBody.scrollTop = chatBody.scrollHeight;
 
+        // Coleta os itens atuais e disponíveis para enviar como contexto para a IA
+        const itensAtuais = getItensAtuais();
+        const itensDisponiveis = getItensDisponiveis();
+
         fetch("http://localhost:3080/api/assistente", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ mensagem: msg })
+            body: JSON.stringify({ 
+                mensagem: msg, 
+                itens: itensAtuais,
+                itens_disponiveis: itensDisponiveis 
+            })
         })
         .then(async (r) => {
-            let data;
-            try {
-                data = await r.json();
-            } catch {
-                data = { resposta: "[Resposta inválida do servidor]" };
+            if (!r.ok) {
+                const err = await r.json();
+                throw new Error(err.erro || "Erro na comunicação com a API.");
             }
-            document.getElementById(loadingId)?.remove();
-            chatBody.innerHTML += `<div class="msg-ia">${data.resposta || "[Sem resposta]"}</div>`;
+            return r.json();
+        })
+        .then((data) => {
+            const loadingDiv = document.getElementById(loadingId);
+            
+            // Exibe a resposta da IA
+            if (data.resposta) {
+                loadingDiv.innerHTML = data.resposta;
+            } else {
+                loadingDiv.remove();
+            }
+
             chatBody.scrollTop = chatBody.scrollHeight;
         })
-        .catch(() => {
-            document.getElementById(loadingId)?.remove();
-            chatBody.innerHTML += `<div class="msg-ia">[Erro de conexão com o assistente]</div>`;
-            chatBody.scrollTop = chatBody.scrollHeight;
+        .catch((err) => {
+            const loadingDiv = document.getElementById(loadingId);
+            if (loadingDiv) {
+                loadingDiv.innerHTML = `Erro: ${err.message}`;
+                loadingDiv.style.color = "red";
+            }
         });
     }
 
