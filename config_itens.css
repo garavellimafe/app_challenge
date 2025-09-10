@@ -431,7 +431,7 @@ input:checked + .slider:before {
   position: fixed;
   bottom: 30px;
   right: 30px;
-  width: 350px;
+  width: 600px;
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 4px 16px rgba(0,0,0,0.2);
@@ -461,8 +461,8 @@ input:checked + .slider:before {
 .chat-body {
   background: #fafafa;
   padding: 14px;
-  min-height: 180px;
-  max-height: 260px;
+  min-height: 300px;
+  max-height: 600px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;

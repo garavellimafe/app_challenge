@@ -11,7 +11,10 @@ load_dotenv()
 # Configura a API da Gemini
 try:
     genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-    model = genai.GenerativeModel("gemini-1.5-flash")
+    model = genai.GenerativeModel("gemini-1.5-flash", generation_config={
+        "temperature": 0.7,
+        "max_output_tokens": 300,  # Limita o tamanho da resposta
+    })
     print("Modelo da Gemini carregado com sucesso.")
 except Exception as e:
     print(f"Erro ao configurar a API da Gemini: {e}")
@@ -38,6 +41,7 @@ def assistente():
         # Constrói o prompt para a IA, dando o contexto dos itens atuais
         itens_disponiveis = dados.get("itens_disponiveis", [])
         
+        # Simplifica o contexto para respostas mais rápidas
         prompt = f"""
         Você é um assistente amigável de configuração de sistemas de energia solar da GoodWe.
         Você ajuda os usuários explicando como usar a interface, mas NÃO pode adicionar, remover ou modificar itens diretamente.
@@ -46,13 +50,14 @@ def assistente():
         A lista de produtos disponíveis para adicionar é: {json.dumps(itens_disponiveis, indent=2)}
 
         Importante:
-        1. Sempre explique ao usuário como realizar as ações manualmente:
+        1. Se o usuário agradecer ou expressar gratidão, responda de forma breve e educada (ex: "Por nada! Como posso ajudar?", "Disponha!", "Fico feliz em ajudar!")
+        2. Se o usuário mudar de assunto, não faça referência ao assunto anterior, apenas responda à nova pergunta.
+        3. Para ações na interface, explique ao usuário como realizar manualmente:
            - Para adicionar: "Clique no botão '+ Adicionar Item', escolha a categoria apropriada e selecione o produto desejado"
            - Para configurar: "Clique no item que deseja configurar, ajuste as opções de Ativo/Prioritário e clique em Confirmar"
            - Para remover: "Clique no item, e então clique no botão 'Remover'"
-        2. Informe que você não pode realizar as ações diretamente, apenas guiar o usuário.
-        3. Se o usuário perguntar sobre um produto específico, sugira em qual categoria ele pode encontrá-lo.
-        4. Se um item solicitado não existir na lista, informe educadamente.
+        4. Se o usuário perguntar sobre um produto específico, sugira em qual categoria ele pode encontrá-lo.
+        5. Se um item solicitado não existir na lista, informe educadamente.
 
         Com base na solicitação do usuário: "{mensagem_usuario}", forneça instruções claras e amigáveis sobre como proceder.
         """
