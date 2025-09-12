@@ -290,7 +290,10 @@
     <div class="chat-modal" id="chatModal">
         <div class="chat-header">
             Assistente Virtual
-            <span class="chat-close" id="chatClose">&times;</span>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <span id="btnLimparMemoria" style="cursor: pointer; font-size: 14px; opacity: 0.8;" title="Limpar memória da conversa">🧹</span>
+                <span class="chat-close" id="chatClose">&times;</span>
+            </div>
         </div>
         <div class="chat-body" id="chatBody"></div>
         <div class="chat-footer">

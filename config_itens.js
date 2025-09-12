@@ -4,7 +4,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const botaoAdicionar = document.getElementById("botaoAdicionar");
     const fecharModal = document.getElementById("fecharModal");
     const gridSelecionados = document.getElementById("gridSelecionados");
-    const btnLimpar = document.getElementById("btnLimpar");
+     // FUNÇÃO PARA EXTRAIR ITENS DISPONÍVEIS DO MODAL
+    function getItensDisponiveis() {
+        const itens = [];
+        document.querySelectorAll(".item_adicionavel1").forEach(item => {
+            const span = item.querySelector("span");
+            if (span) {
+                const nome = span.textContent.trim();
+                if (nome) { // Só adiciona se tiver nome
+                    itens.push(nome);
+                }
+            }
+        });
+        console.log(`📦 Itens disponíveis encontrados: ${itens.length}`, itens);
+        return itens;
+    }nLimpar = document.getElementById("btnLimpar");
     const campoPesquisa = document.getElementById("campoPesquisa");
     const btnExportar = document.getElementById("btnExportar");
     const btnImportar = document.getElementById("btnImportar");
@@ -344,24 +358,18 @@ document.addEventListener("DOMContentLoaded", function () {
                 const itens = JSON.parse(evt.target.result);
                 gridSelecionados.innerHTML = "";
                 itens.forEach(item => {
-                    const novoItem = document.createElement("div");
-                    novoItem.classList.add("item_selecionado");
-                    novoItem.setAttribute("data-ativo", item.ativo);
-                    novoItem.setAttribute("data-prioridade", item.prioridade);
-                    novoItem.title = "Clique para editar";
-                    if (item.img) {
-                        const img = document.createElement("img");
-                        img.src = item.img;
-                        img.alt = item.nome;
-                        novoItem.appendChild(img);
-                    }
-                    const texto = document.createElement("span");
-                    texto.textContent = item.nome;
-                    novoItem.appendChild(texto);
-                    gridSelecionados.appendChild(novoItem);
+                    // CORREÇÃO: Usa a função completa para adicionar item
+                    adicionarItemSelecionado(
+                        item.nome || "Sem nome", 
+                        item.img || null, 
+                        item.ativo || false, 
+                        item.prioridade || false
+                    );
                 });
+                console.log(`${itens.length} itens importados com sucesso.`);
             } catch (err) {
                 alert("Arquivo JSON inválido ou formato incompatível.");
+                console.error("Erro ao importar:", err);
             }
         };
         reader.readAsText(file);
@@ -382,36 +390,42 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // FUNÇÕES DE MANIPULAÇÃO DE ITENS PARA IA
     function getItensAtuais() {
-        return Array.from(gridSelecionados.querySelectorAll(".item_selecionado")).map(item => {
-            return {
-                nome: item.querySelector("span")?.textContent || "",
+        const itens = Array.from(gridSelecionados.querySelectorAll(".item_selecionado")).map(item => {
+            const span = item.querySelector("span");
+            const itemData = {
+                nome: span?.textContent || "",
                 ativo: item.getAttribute("data-ativo") === "true",
                 prioridade: item.getAttribute("data-prioridade") === "true",
             };
+            return itemData;
         });
+        console.log(`📋 Itens atuais encontrados: ${itens.length}`, itens);
+        return itens;
     }
 
     function removerItemPeloNome(nome) {
         const itemParaRemover = Array.from(gridSelecionados.querySelectorAll(".item_selecionado")).find(item => {
             const span = item.querySelector("span");
-            return span && span.textContent.toLowerCase() === nome.toLowerCase();
+            return span && span.textContent.trim().toLowerCase() === nome.toLowerCase();
         });
         if (itemParaRemover) {
             itemParaRemover.remove();
             console.log(`Item "${nome}" removido.`);
+            return true;
         } else {
             console.log(`Item "${nome}" não encontrado para remoção.`);
+            return false;
         }
     }
 
     function atualizarItemPeloNome(nomeOriginal, novoNome, ativo, prioridade) {
         const itemParaAtualizar = Array.from(gridSelecionados.querySelectorAll(".item_selecionado")).find(item => {
             const span = item.querySelector("span");
-            return span && span.textContent.toLowerCase() === nomeOriginal.toLowerCase();
+            return span && span.textContent.trim().toLowerCase() === nomeOriginal.toLowerCase();
         });
 
         if (itemParaAtualizar) {
-            if (novoNome) {
+            if (novoNome && novoNome !== nomeOriginal) {
                 const span = itemParaAtualizar.querySelector("span");
                 if (span) span.textContent = novoNome;
             }
@@ -429,35 +443,69 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (switchPrioridade) switchPrioridade.checked = prioridade;
                 if (prioridadeTexto) prioridadeTexto.textContent = prioridade ? "Prioritário" : "Normal";
             }
-            console.log(`Item "${nomeOriginal}" atualizado.`);
+            console.log(`✅ Item "${nomeOriginal}" atualizado.`);
+            return true;
         } else {
-            console.log(`Item "${nomeOriginal}" não encontrado para atualização.`);
+            console.log(`❌ Item "${nomeOriginal}" não encontrado para atualização.`);
+            return false;
         }
     }
 
     function executarAcao(acao) {
         const { funcao, argumentos } = acao;
-        console.log("Executando ação:", funcao, argumentos);
+        console.log("🎯 Executando ação:", funcao, argumentos);
 
         switch (funcao) {
             case "adicionar_item":
+                // CORREÇÃO: Validação de argumentos
+                if (!argumentos || !argumentos.nome) {
+                    console.warn("❌ Nome do item não fornecido para adicionar");
+                    return false;
+                }
+                
+                console.log(`➕ Tentando adicionar: ${argumentos.nome}`);
+                
                 // Tenta encontrar a imagem correspondente na lista de itens disponíveis
                 const itemOriginal = Array.from(document.querySelectorAll(".item_adicionavel1")).find(item => {
                     const span = item.querySelector("span");
-                    return span && span.textContent.trim().toLowerCase() === argumentos.nome.toLowerCase();
+                    if (span) {
+                        const nomeItem = span.textContent.trim();
+                        console.log(`🔍 Comparando: "${argumentos.nome}" com "${nomeItem}"`);
+                        return nomeItem.toLowerCase() === argumentos.nome.toLowerCase();
+                    }
+                    return false;
                 });
+                
                 const imagemSrc = itemOriginal ? itemOriginal.querySelector("img")?.src : null;
+                console.log(`🖼️ Imagem encontrada: ${imagemSrc ? 'Sim' : 'Não'}`);
 
                 adicionarItemSelecionado(argumentos.nome, imagemSrc, argumentos.ativo || false, argumentos.prioridade || false);
-                break;
+                console.log(`✅ Item "${argumentos.nome}" adicionado com sucesso`);
+                return true;
+                
             case "remover_item":
-                removerItemPeloNome(argumentos.nome);
-                break;
+                if (!argumentos || !argumentos.nome) {
+                    console.warn("❌ Nome do item não fornecido para remover");
+                    return false;
+                }
+                console.log(`🗑️ Tentando remover: ${argumentos.nome}`);
+                const removido = removerItemPeloNome(argumentos.nome);
+                console.log(`${removido ? '✅' : '❌'} Remoção do item "${argumentos.nome}": ${removido ? 'sucesso' : 'falhou'}`);
+                return removido;
+                
             case "atualizar_item":
-                atualizarItemPeloNome(argumentos.nome_original, argumentos.novo_nome, argumentos.ativo, argumentos.prioridade);
-                break;
+                if (!argumentos || !argumentos.nome_original) {
+                    console.warn("❌ Nome original do item não fornecido para atualizar");
+                    return false;
+                }
+                console.log(`🔧 Tentando atualizar: ${argumentos.nome_original}`);
+                const atualizado = atualizarItemPeloNome(argumentos.nome_original, argumentos.novo_nome, argumentos.ativo, argumentos.prioridade);
+                console.log(`${atualizado ? '✅' : '❌'} Atualização do item "${argumentos.nome_original}": ${atualizado ? 'sucesso' : 'falhou'}`);
+                return atualizado;
+                
             default:
-                console.warn(`Função desconhecida: ${funcao}`);
+                console.warn(`❌ Função desconhecida: ${funcao}`);
+                return false;
         }
     }
 
@@ -465,6 +513,34 @@ document.addEventListener("DOMContentLoaded", function () {
     const chatClose = document.getElementById("chatClose");
     const chatInput = document.getElementById("chatInput");
     const chatSend = document.getElementById("chatSend");
+    
+    // SISTEMA DE SESSÃO PARA MEMÓRIA DA IA
+    let sessaoAtual = null;
+    
+    // Gera ou recupera ID de sessão único
+    function obterSessaoId() {
+        if (!sessaoAtual) {
+            // Tenta recuperar sessão existente do localStorage
+            sessaoAtual = localStorage.getItem('goodwe_chat_session');
+            if (!sessaoAtual) {
+                // Gera nova sessão
+                sessaoAtual = 'sess_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('goodwe_chat_session', sessaoAtual);
+                console.log('🆕 Nova sessão criada:', sessaoAtual);
+            } else {
+                console.log('🔄 Sessão recuperada:', sessaoAtual);
+            }
+        }
+        return sessaoAtual;
+    }
+    
+    // Função para limpar sessão (pode ser chamada para "esquecer" a conversa)
+    function limparSessao() {
+        localStorage.removeItem('goodwe_chat_session');
+        sessaoAtual = null;
+        chatBody.innerHTML = "";
+        console.log('🧹 Sessão limpa');
+    }
 
     document.querySelectorAll(".cabecalho_item").forEach(item => {
         if (item.textContent.trim().toLowerCase() === "assistente virtual") {
@@ -487,6 +563,15 @@ document.addEventListener("DOMContentLoaded", function () {
     chatClose?.addEventListener("click", () => {
         chatModal.style.display = "none";
     });
+    
+    // Botão para limpar memória da IA
+    const btnLimparMemoria = document.getElementById("btnLimparMemoria");
+    btnLimparMemoria?.addEventListener("click", () => {
+        if (confirm("Deseja realmente limpar a memória da conversa? A IA esquecerá tudo que foi dito anteriormente.")) {
+            limparSessao();
+            chatBody.innerHTML = `<div class="msg-ia">Memória limpa! Olá novamente, como posso ajudar?</div>`;
+        }
+    });
 
     function enviarMensagem() {
         const msg = chatInput.value.trim();
@@ -503,6 +588,17 @@ document.addEventListener("DOMContentLoaded", function () {
         // Coleta os itens atuais e disponíveis para enviar como contexto para a IA
         const itensAtuais = getItensAtuais();
         const itensDisponiveis = getItensDisponiveis();
+        
+        console.log("📤 Enviando para IA:", {
+            mensagem: msg,
+            itens_atuais: itensAtuais.length,
+            itens_disponiveis: itensDisponiveis.length,
+            sessao_id: obterSessaoId()
+        });
+
+        // Timeout para a API
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 segundos
 
         fetch("http://localhost:3080/api/assistente", {
             method: "POST",
@@ -510,8 +606,10 @@ document.addEventListener("DOMContentLoaded", function () {
             body: JSON.stringify({ 
                 mensagem: msg, 
                 itens: itensAtuais,
-                itens_disponiveis: itensDisponiveis 
-            })
+                itens_disponiveis: itensDisponiveis,
+                sessao_id: obterSessaoId()  // Inclui ID da sessão
+            }),
+            signal: controller.signal
         })
         .then(async (r) => {
             if (!r.ok) {
@@ -521,7 +619,14 @@ document.addEventListener("DOMContentLoaded", function () {
             return r.json();
         })
         .then((data) => {
+            clearTimeout(timeoutId); // Limpa o timeout se a requisição foi bem-sucedida
             const loadingDiv = document.getElementById(loadingId);
+            
+            // Atualiza sessão se recebida do servidor
+            if (data.sessao_id) {
+                sessaoAtual = data.sessao_id;
+                localStorage.setItem('goodwe_chat_session', sessaoAtual);
+            }
             
             // Exibe a resposta da IA
             if (data.resposta) {
@@ -530,14 +635,63 @@ document.addEventListener("DOMContentLoaded", function () {
                 loadingDiv.remove();
             }
 
+            // EXECUTA AS AÇÕES RETORNADAS PELA IA (CORREÇÃO PRINCIPAL)
+            if (data.acoes && Array.isArray(data.acoes)) {
+                let acoesExecutadas = 0;
+                let mensagensAcao = [];
+                
+                data.acoes.forEach(acao => {
+                    try {
+                        const sucesso = executarAcao(acao);
+                        if (sucesso) {
+                            acoesExecutadas++;
+                            // Gera mensagem de confirmação específica
+                            switch(acao.funcao) {
+                                case "adicionar_item":
+                                    mensagensAcao.push(`➕ Adicionado: ${acao.argumentos.nome}`);
+                                    break;
+                                case "remover_item":
+                                    mensagensAcao.push(`🗑️ Removido: ${acao.argumentos.nome}`);
+                                    break;
+                                case "atualizar_item":
+                                    let detalhes = [];
+                                    if (acao.argumentos.ativo !== undefined) detalhes.push(acao.argumentos.ativo ? "Ativado" : "Desativado");
+                                    if (acao.argumentos.prioridade !== undefined) detalhes.push(acao.argumentos.prioridade ? "Prioritário" : "Normal");
+                                    mensagensAcao.push(`🔧 Atualizado: ${acao.argumentos.nome_original} (${detalhes.join(", ")})`);
+                                    break;
+                            }
+                        }
+                    } catch (error) {
+                        console.error("Erro ao executar ação:", error);
+                        chatBody.innerHTML += `<div class="msg-ia" style="color: red;">❌ Erro ao executar ação: ${error.message}</div>`;
+                    }
+                });
+                
+                if (acoesExecutadas > 0) {
+                    chatBody.innerHTML += `<div class="msg-ia" style="color: green; font-size: 0.9em; margin-top: 10px;">${mensagensAcao.join('<br>')}</div>`;
+                }
+            }
+
             chatBody.scrollTop = chatBody.scrollHeight;
         })
         .catch((err) => {
+            clearTimeout(timeoutId);
             const loadingDiv = document.getElementById(loadingId);
             if (loadingDiv) {
-                loadingDiv.innerHTML = `Erro: ${err.message}`;
+                let mensagemErro = "Erro na comunicação com a IA.";
+                
+                if (err.name === 'AbortError') {
+                    mensagemErro = "Tempo limite excedido. Tente novamente.";
+                } else if (err.message.includes("Failed to fetch")) {
+                    mensagemErro = "Servidor não está rodando. Execute: python config_itens.py";
+                } else if (err.message) {
+                    mensagemErro = err.message;
+                }
+                
+                loadingDiv.innerHTML = `Erro: ${mensagemErro}`;
                 loadingDiv.style.color = "red";
             }
+            chatBody.scrollTop = chatBody.scrollHeight;
         });
     }
 
