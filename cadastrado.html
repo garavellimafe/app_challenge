@@ -1,9 +1,7 @@
-<!-- APP_CHALLENGE/cadastrado.html -->
 <!doctype html>
 <html lang="pt-br">
 <head>
   <meta charset="utf-8" />
-  <title>Entrar • MeuSite</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <!-- MESMO CSS da pginicial/config_itens -->
   <link rel="stylesheet" href="cadastrado.css" />
@@ -11,9 +9,9 @@
 <body>
   <!-- Topo (igual às outras páginas) -->
   <header class="topo">
-    <div class="logo"><a href="pginicial.html"><img src="logo.png" alt="Logo" /></a></div>
+    <div class="logo"><img src="../imagens/goodwe.webp" alt="Logo da Goodwe"></div>
     <div class="cabecalho">
-      <div class="cabecalho_tema">MeuSite</div>
+      <div class="cabecalho_tema"></div>
       <nav class="cabecalho_itens">
         <a class="cabecalho_item" href="pginicial.html">Início</a>
         <a class="cabecalho_item" href="cadastro.html">Cadastro</a>
@@ -22,15 +20,7 @@
     </div>
   </header>
 
-  <section class="barra">
-    <div class="barra_item1">
-      <input type="search" class="campo_pesquisa" placeholder="Pesquisar..." aria-label="Pesquisar" />
-    </div>
-    <button class="botao_adicionar" type="button" onclick="window.location.href='cadastro.html'">
-      Novo cadastro
-    </button>
-  </section>
-
+  <!-- Conteúdo -->
   <main class="container">
     <section class="card">
       <h1 class="titulo">Acesse sua conta</h1>
@@ -52,6 +42,9 @@
 
         <div class="acoes-form">
           <button class="btn primario" type="submit">Entrar</button>
+          <button class="botao_adicionar" type="button" onclick="window.location.href='cadastro.html'">
+            Novo cadastro
+          </button>
         </div>
 
         <div id="msg" class="msg" role="alert" hidden></div>
@@ -66,4 +59,3 @@
   </script>
 </body>
 </html>
-<!-- APP_CHALLENGE/cadastrado.html -->

@@ -4,6 +4,19 @@
   const form = $('#form-login');
   const msg = $('#msg');
 
+  // Ler e apagar após o uso
+  const raw = sessionStorage.getItem('last_user');
+  if (raw) {
+    const last = JSON.parse(raw);
+    // usar last.senha / last.username
+    const ident = document.querySelector('#login-ident');
+    const pwd = document.querySelector('#pwd-login');
+    if (ident) ident.value = last.username || last.cpf || '';
+    if (pwd) pwd.value = last.senha || '';
+    // APAGAR DEPOIS DE USAR
+    sessionStorage.removeItem('last_user');
+  }
+
   // Toggle mostrar/ocultar senha
   document.addEventListener('click', (ev) => {
     const btn = ev.target.closest('.password-toggle');

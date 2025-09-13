@@ -54,7 +54,7 @@
         sessionStorage.setItem('last_user', JSON.stringify({
           nome: data.user.nome, username: data.user.username, cpf: data.user.cpf, senha: data.senha
         }));
-
+        
         // Vai para a tela de login (cadastrado), conforme pedido
         window.location.href = 'cadastrado.html';
       } catch (err) {
@@ -63,4 +63,4 @@
     });
   }
 })();
-// APP_CHALLENGE/cadastrado.js
+// APP_CHALLENGE/cadastro.js

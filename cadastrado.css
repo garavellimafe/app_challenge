@@ -80,6 +80,15 @@ body {
   transition: background-color .2s ease, border-color .2s ease, color .2s ease, transform .08s ease;
   text-decoration: none; font-weight: 600;
 }
+.btn,
+.botao_adicionar {
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.btn:hover,
+.botao_adicionar:hover {
+  transform: scale(1.05); /* aumenta 5% */
+}
 .btn:hover { background: #f4f4f4; }
 .btn:active { transform: translateY(1px); }
 
@@ -100,6 +109,13 @@ body {
 
 /* Ações do formulário */
 .acoes-form { margin-top: 12px; display:flex; gap: 10px; }
+.acoes-form {
+  display: flex;
+  justify-content: space-between; /* joga os botões para extremos opostos */
+  align-items: center;            /* garante alinhamento vertical */
+  margin-top: 20px;
+}
+
 
 /* Mensagens */
 .msg {
