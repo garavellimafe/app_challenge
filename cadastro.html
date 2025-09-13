@@ -1,92 +1,75 @@
-<!DOCTYPE html>
+<!-- APP_CHALLENGE/cadastro.html -->
+<!doctype html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <title>Cadastro</title>
-    <link rel="stylesheet" href="cadastro.css">
+  <meta charset="utf-8" />
+  <title>Cadastro • MeuSite</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Use o MESMO CSS das páginas pginicial/config_itens -->
+  <link rel="stylesheet" href="cadastro.css" />
 </head>
 <body>
-    <div class="container">
-        <div class="logo">
-            <a href="pginicial.html">
-                <img src="goodwe.webp" alt="Logo da Goodwe">
-            </a>
+  <!-- Topo (mesma estrutura da pginicial/config_itens) -->
+  <header class="topo">
+    <div class="logo"><a href="pginicial.html"><img src="logo.png" alt="Logo" /></a></div>
+    <div class="cabecalho">
+      <div class="cabecalho_tema">MeuSite</div>
+      <nav class="cabecalho_itens">
+        <a class="cabecalho_item" href="pginicial.html">Início</a>
+        <a class="cabecalho_item active" href="cadastro.html">Cadastro</a>
+        <a class="cabecalho_item" href="cadastrado.html">Entrar</a>
+      </nav>
+    </div>
+  </header>
+
+
+  <!-- Conteúdo -->
+  <main class="container">
+    <section class="card">
+      <h1 class="titulo">Cadastro</h1>
+      <p class="sub">Preencha seus <strong>dados</strong>.</p>
+
+      <form id="form-cadastro" class="form">
+        <div class="campo">
+          <label class="rotulo">Nome completo</label>
+          <input type="text" name="nome" class="entrada" required />
         </div>
 
-        <form id="formCadastro">
-            <!-- Informações Pessoais -->
-            <div class="info_pessoa">
-                <h3>Informações Pessoais</h3>
-                <div class="pessoa_item">
-                    <label>Nome Completo</label>
-                    <input type="text" placeholder="Digite seu nome" required>
-                </div>
-                <div class="pessoa_item">
-                    <label>Idade</label>
-                    <input type="number" placeholder="Digite sua idade" required>
-                </div>
-                <div class="pessoa_item">
-                    <label>Email</label>
-                    <input type="email" placeholder="exemplo@email.com" required>
-                </div>
-                <div class="pessoa_item">
-                    <label>CPF</label>
-                    <input type="text" placeholder="CPF" required>
-                </div>
-            </div>
+        <div class="campo">
+          <label class="rotulo">Nome de usuário <span class="muted">(opcional)</span></label>
+          <input type="text" name="username" class="entrada" placeholder="ex.: rogerio_filho" minlength="3" maxlength="20" />
+          <small class="muted">Se não preencher, o sistema cria um a partir do seu nome.</small>
+        </div>
 
-            <!-- Senhas -->
-            <div class="info_senha">
-                <h3>Segurança</h3>
-                <div class="senha_item">
-                    <label>Senha</label>
-                    <input type="password" placeholder="Digite sua senha" required>
-                    <ul class="senha-requisitos">
-                        <li id="req-min">Mínimo de 8 caracteres</li>
-                        <li id="req-letra">Deve conter letras (A-Z)</li>
-                        <li id="req-num">Deve conter números (0-9)</li>
-                        <li id="req-especial">Deve conter caracteres especiais (ex: @, #, !)</li>
-                    </ul>
-                </div>
-                <div class="senha_item">
-                    <label>Confirmar Senha</label>
-                    <input type="password" placeholder="Confirme sua senha" required>
-                </div>
-            </div>
+        <div class="campo">
+          <label class="rotulo">CPF (somente números)</label>
+          <input type="text" name="cpf" class="entrada" pattern="\d{11}" minlength="11" maxlength="11" required />
+        </div>
 
-            <!-- Endereço -->
-            <div class="info_casa">
-                <h3>Endereço</h3>
-                <div class="casa_item">
-                    <label>CEP</label>
-                    <input type="text" placeholder="CEP" required>
-                </div>
-                <div class="casa_item">
-                    <label>Rua</label>
-                    <input type="text" placeholder="Digite sua rua" required>
-                </div>
-                <div class="casa_item">
-                    <label>Número</label>
-                    <input type="text" placeholder="Número da casa" required>
-                </div>
-                <div class="casa_item">
-                    <label>Complemento</label>
-                    <input type="text" placeholder="Apto, bloco, etc. (opcional)">
-                </div>
-                <div class="casa_item">
-                    <label>Cidade</label>
-                    <input type="text" placeholder="Digite sua cidade" required>
-                </div>
-                <div class="casa_item">
-                    <label>Estado</label>
-                    <input type="text" placeholder="Digite seu estado" required>
-                </div>
-            </div>
+        <div class="campo">
+          <label class="rotulo">Senha</label>
+          <div class="input-group">
+            <input type="password" name="senha" id="pwd-register" class="entrada" minlength="4" placeholder="Deixe em branco para gerar automaticamente" />
+            <button type="button" class="btn ghost password-toggle" data-target="#pwd-register">Mostrar</button>
+          </div>
+          <label class="check" style="display:inline-flex;align-items:center;gap:8px;margin-top:6px;color:#555;">
+            <input type="checkbox" id="autoPwd" name="auto_pwd" />
+            Gerar senha automaticamente
+          </label>
+        </div>
 
-            <button id="btnCadastrar" type="submit" disabled>Cadastrar</button>
-        </form>
-    </div>
+        <div class="acoes-form">
+            <button class="botao_adicionar" type="button" onclick="window.location.href='cadastrado.html'">
+      Já tenho conta
+    </button>
+          <button class="btn primario" type="submit">Cadastrar</button>
+        </div>
 
-    <script src="cadastro.js"></script>
+        <div id="msg" class="msg" role="alert" hidden></div>
+      </form>
+    </section>
+  </main>
+
+  <script src="cadastro.js" defer></script>
 </body>
 </html>

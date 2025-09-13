@@ -1,103 +1,127 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
+/* APP_CHALLENGE/cadastrado.css */
+/* Reset básico */
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
+html, body { height: 100%; }
 body {
-    min-height: 100vh;
-    background-color: #e74c3c;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 40px 20px;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #fff;
+  color: #222;
 }
 
-/* Container principal */
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
+/* ---------- Topo ---------- */
+.topo {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 20px; background-color: #f5f5f5; border-bottom: 1px solid #e7e7e7;
+}
+.logo img { height: 50px; display:block; }
+.cabecalho {
+  display: flex; justify-content: space-between; align-items: center;
+  flex-grow: 1; margin-left: 20px;
+}
+.cabecalho_tema { font-size: 20px; font-weight: bold; color: gray; }
+.cabecalho_itens { display: flex; gap: 20px; }
+.cabecalho_item {
+  font-size: 16px; color: gray; cursor: pointer; text-decoration: none;
+  transition: color 0.2s ease;
+}
+.cabecalho_item:hover { color: #c62828; }
+.cabecalho_item.active { color: #c62828; font-weight: 600; }
+
+/* ---------- Barra superior ---------- */
+.barra {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 15px 20px; background-color: #eaeaea; gap: 20px; border-bottom: 1px solid #ddd;
+}
+.barra_item1 { flex-grow: 1; }
+.campo_pesquisa {
+  padding: 12px 16px; font-size: 16px; border: 1px solid #ccc; border-radius: 6px;
+  width: 100%; background-color: #fff; color: #333;
+}
+.botao_adicionar {
+  padding: 10px 20px; font-size: 14px; background-color: #c62828; color: #fff;
+  border: none; border-radius: 6px; cursor: pointer; transition: background-color 0.2s ease;
+  white-space: nowrap;
+}
+.botao_adicionar:hover { background-color: #b71c1c; }
+
+/* ---------- Container / Card ---------- */
+.container { width: min(100%, 1100px); margin-inline: auto; padding: 20px; }
+.card {
+  background: #fafafa; border: 1px solid #ddd; border-radius: 8px; padding: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.04);
 }
 
-/* Caixa de login */
-.login {
-    background-color: #fff;
-    padding: 40px 50px;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    max-width: 500px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-    align-items: center;
-}
+/* ---------- Títulos / textos ---------- */
+.titulo { font-size: 24px; margin-bottom: 6px; }
+.sub { color: #666; margin-bottom: 12px; }
+.muted { color: #777; }
 
-/* Logo dentro do container */
-.logo {
-    text-align: center;
+/* ---------- Formulário ---------- */
+.form { margin-top: 6px; }
+.campo { margin-bottom: 14px; }
+.rotulo { display:block; font-weight: 600; color:#333; margin-bottom: 6px; }
+.entrada {
+  width: 100%; padding: 12px 14px; font-size: 16px;
+  border: 1px solid #ccc; border-radius: 6px; background: #fff; color: #222;
+  outline: none; transition: box-shadow 0.2s ease, border-color 0.2s ease;
 }
+.entrada:focus { border-color: #c62828; box-shadow: 0 0 0 3px rgba(198,40,40,0.12); }
 
-.logo img {
-    width: 100%;
-    max-width: 150px;
-    height: auto;
+.input-group { display: flex; align-items: stretch; }
+.input-group .entrada { border-top-right-radius: 0; border-bottom-right-radius: 0; }
+.input-group .btn { border-top-left-radius: 0; border-bottom-left-radius: 0; }
+
+/* ---------- Botões ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: .4rem;
+  padding: 10px 16px; border-radius: 6px; border: 1px solid #ccc;
+  background: #fff; color: #333; cursor: pointer;
+  transition: background-color .2s ease, border-color .2s ease, color .2s ease, transform .08s ease;
+  text-decoration: none; font-weight: 600;
 }
+.btn:hover { background: #f4f4f4; }
+.btn:active { transform: translateY(1px); }
 
-/* Texto dentro do container */
-.texto-topo {
-    color: #333;
-    font-size: 22px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 10px;
+.btn.primario {
+  background: #c62828; color: #fff; border-color: #c62828;
 }
+.btn.primario:hover { background: #b71c1c; border-color: #b71c1c; }
 
-/* Campos de entrada */
-.login_item {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
+.btn.ghost {
+  background: #eee; color: #333; border-color: #ddd;
 }
+.btn.ghost:hover { background: #e4e4e4; }
 
-label {
-    margin-bottom: 6px;
-    font-weight: bold;
-    color: #555;
-    font-size: 15px;
+.btn.outline {
+  background: #fff; color: #c62828; border-color: #c62828;
 }
+.btn.outline:hover { background: #fdeaea; }
 
-input {
-    padding: 14px;
-    border: 1px solid #bbb;
-    border-radius: 6px;
-    font-size: 16px;
-    outline: none;
-    transition: 0.3s;
+/* Ações do formulário */
+.acoes-form { margin-top: 12px; display:flex; gap: 10px; }
+
+/* Mensagens */
+.msg {
+  margin-top: 12px; padding: 10px 12px; border-radius: 6px; border: 1px solid #ddd;
+  background: #f5f5f5; color: #333;
 }
+.msg.ok { border-color: #8bc34a; background: #f1f8e9; color: #2e7d32; }
+.msg.error { border-color: #ef9a9a; background: #ffebee; color: #c62828; }
 
-input:focus {
-    border-color: #e74c3c;
-    box-shadow: 0 0 5px rgba(231, 76, 60, 0.5);
+/* ---------- Utilidades ---------- */
+.row { display:flex; align-items:center; gap: 10px; }
+.grid-3 { display:grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+img { max-width: 100%; height: auto; display:block; }
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 720px) {
+  .cabecalho_itens { gap: 12px; }
+  .barra { flex-direction: column; align-items: stretch; }
+  .botao_adicionar { width: 100%; }
 }
-
-/* Botão */
-button {
-    width: 100%;
-    padding: 14px;
-    border: none;
-    border-radius: 8px;
-    font-size: 17px;
-    font-weight: bold;
-    background-color: #7f8c8d;
-    color: white;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-button:hover {
-    background-color: #e74c3c;
+@media (max-width: 500px) {
+  .cabecalho { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .cabecalho_tema { font-size: 18px; }
+  .barra { gap: 10px; }
 }

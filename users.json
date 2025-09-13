@@ -1,0 +1,23 @@
+[
+  {
+    "nome": "Rogerio deligi ferreira filho",
+    "username": "Rogerio_Filho",
+    "cpf": "52386634809",
+    "password_hash": "scrypt:32768:8:1$vJ0qtURwBSZ3rVgm$d95d5dfae9dce751a48318e0f4c18730f449f246e287d64e0f63417b32761c00dda646aa37293e136f6c8b87d156d1b74a79dcec11a0751aad86df901773fd05",
+    "created_at": "2025-09-13T14:23:10.592546Z"
+  },
+  {
+    "nome": "teste",
+    "username": "teste",
+    "cpf": "12312312312",
+    "password_hash": "scrypt:32768:8:1$CW8A1fQMA44LbUdY$2356cc30ac2a945b349c6cf7180a5b54ab4d6c936512f98e1a583b5a1c0a6fb05d2e4fa280eb2fd20261a8b65fdd0b4f2c423f4d07cf9c941cddaaf1e94c95a1",
+    "created_at": "2025-09-13T14:26:22.764873Z"
+  },
+  {
+    "nome": "ANtonio gomes cagao",
+    "username": "Tonhao2",
+    "cpf": "92365093265",
+    "password_hash": "scrypt:32768:8:1$fRXEM4haiCaoiLUO$862ad058d4065560a5cedfc91662fe42dfa1b61937f836b6e5e5cf1c19a66b6383b968dcbe5ad5639784bf1f58ade13ba7b30c356c986c6915c99687be74a5bb",
+    "created_at": "2025-09-13T15:29:34.777519Z"
+  }
+]

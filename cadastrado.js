@@ -1,63 +1,39 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const btnEntrar = document.getElementById("btnEntrar");
+// APP_CHALLENGE/cadastrado.js
+(function () {
+  const $ = (sel, ctx = document) => ctx.querySelector(sel);
+  const form = $('#form-login');
+  const msg = $('#msg');
 
-    btnEntrar.addEventListener("click", () => {
-        const emailCpf = document.getElementById("emailCpf").value.trim();
-        const senha = document.getElementById("senha").value.trim();
+  // Toggle mostrar/ocultar senha
+  document.addEventListener('click', (ev) => {
+    const btn = ev.target.closest('.password-toggle');
+    if (!btn) return;
+    const input = $(btn.getAttribute('data-target'));
+    if (!input) return;
+    const isPwd = input.type === 'password';
+    input.type = isPwd ? 'text' : 'password';
+    btn.textContent = isPwd ? 'Ocultar' : 'Mostrar';
+  });
 
-        if (emailCpf === "" || senha === "") {
-            alert("Por favor, preencha todos os campos.");
-            return;
-        }
+  const showMsg = (text, ok) => {
+    msg.hidden = false;
+    msg.textContent = text;
+    msg.className = 'msg ' + (ok ? 'ok' : 'error');
+  };
 
-        // Validação de email
-        const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailCpf);
-
-        // Validação de CPF
-        const cpfLimpo = emailCpf.replace(/[^\d]/g, "");
-        const cpfValido = validarCPF(cpfLimpo);
-
-        if (!emailValido && !cpfValido) {
-            alert("Insira um email ou CPF válido.");
-            return;
-        }
-
-        // Validação de senha
-        const senhaValida = validarSenha(senha);
-        if (!senhaValida) {
-            alert("Senha incorreta.");
-            return;
-        }
-
-        // Redireciona se tudo estiver ok
-        window.location.href = "config_itens.html";
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault(); msg.hidden = true;
+      try {
+        const res = await fetch('/api/login', { method: 'POST', body: new FormData(form) });
+        const data = await res.json();
+        if (!res.ok || !data.ok) { showMsg(data.error || 'Falha no login.', false); return; }
+        showMsg('Login realizado com sucesso!', true);
+        document.dispatchEvent(new CustomEvent('login:ok'));
+      } catch (err) {
+        console.error(err); showMsg('Erro de comunicação com o servidor.', false);
+      }
     });
-
-    // Função para validar CPF
-    function validarCPF(cpf) {
-        if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
-        let soma = 0, resto;
-
-        for (let i = 1; i <= 9; i++) soma += parseInt(cpf[i - 1]) * (11 - i);
-        resto = (soma * 10) % 11;
-        if (resto === 10 || resto === 11) resto = 0;
-        if (resto !== parseInt(cpf[9])) return false;
-
-        soma = 0;
-        for (let i = 1; i <= 10; i++) soma += parseInt(cpf[i - 1]) * (12 - i);
-        resto = (soma * 10) % 11;
-        if (resto === 10 || resto === 11) resto = 0;
-
-        return resto === parseInt(cpf[10]);
-    }
-
-    // Função para validar senha
-    function validarSenha(senha) {
-        const temMinimo = senha.length >= 8;
-        const temLetra = /[a-zA-Z]/.test(senha);
-        const temNumero = /\d/.test(senha);
-        const temEspecial = /[\W_]/.test(senha);
-
-        return temMinimo && temLetra && temNumero && temEspecial;
-    }
-});
+  }
+})();
+// APP_CHALLENGE/cadastrado.js

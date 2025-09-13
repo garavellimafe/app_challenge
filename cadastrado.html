@@ -1,33 +1,69 @@
-<!DOCTYPE html>
+<!-- APP_CHALLENGE/cadastrado.html -->
+<!doctype html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <title>Cadastrar</title>
-    <link rel="stylesheet" href="cadastrado.css">
+  <meta charset="utf-8" />
+  <title>Entrar • MeuSite</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- MESMO CSS da pginicial/config_itens -->
+  <link rel="stylesheet" href="cadastrado.css" />
 </head>
 <body>
-    <div class="container">
-        <div class="login">
-            <div class="logo">
-                <a href="pginicial.html">
-                    <img src="goodwe.webp" alt="Logo da Goodwe">
-                </a>
-            </div>
-
-            <p class="texto-topo">Já sou cadastrado</p>
-
-            <div class="login_item">
-                <label for="emailCpf">Email ou CPF</label>
-                <input type="text" id="emailCpf" placeholder="Digite seu email ou CPF" required>
-            </div>
-            <div class="login_item">
-                <label for="senha">Senha</label>
-                <input type="password" id="senha" placeholder="Digite sua senha" required>
-            </div>
-            <button id="btnEntrar" type="button">Entrar</button>
-        </div>
+  <!-- Topo (igual às outras páginas) -->
+  <header class="topo">
+    <div class="logo"><a href="pginicial.html"><img src="logo.png" alt="Logo" /></a></div>
+    <div class="cabecalho">
+      <div class="cabecalho_tema">MeuSite</div>
+      <nav class="cabecalho_itens">
+        <a class="cabecalho_item" href="pginicial.html">Início</a>
+        <a class="cabecalho_item" href="cadastro.html">Cadastro</a>
+        <a class="cabecalho_item active" href="cadastrado.html">Entrar</a>
+      </nav>
     </div>
+  </header>
 
-    <script src="cadastrado.js"></script>
+  <section class="barra">
+    <div class="barra_item1">
+      <input type="search" class="campo_pesquisa" placeholder="Pesquisar..." aria-label="Pesquisar" />
+    </div>
+    <button class="botao_adicionar" type="button" onclick="window.location.href='cadastro.html'">
+      Novo cadastro
+    </button>
+  </section>
+
+  <main class="container">
+    <section class="card">
+      <h1 class="titulo">Acesse sua conta</h1>
+      <p class="sub">Use <strong>CPF + senha</strong> ou <strong>Usuário + senha</strong>.</p>
+
+      <form id="form-login" class="form">
+        <div class="campo">
+          <label class="rotulo">CPF (11 dígitos) <span class="muted">ou</span> Usuário</label>
+          <input type="text" id="login-ident" name="ident" class="entrada" required />
+        </div>
+
+        <div class="campo">
+          <label class="rotulo">Senha</label>
+          <div class="input-group">
+            <input type="password" id="pwd-login" name="senha" class="entrada" required />
+            <button type="button" class="btn ghost password-toggle" data-target="#pwd-login">Mostrar</button>
+          </div>
+        </div>
+
+        <div class="acoes-form">
+          <button class="btn primario" type="submit">Entrar</button>
+        </div>
+
+        <div id="msg" class="msg" role="alert" hidden></div>
+      </form>
+    </section>
+  </main>
+
+  <script src="cadastrado.js" defer></script>
+  <script>
+    // após login OK, ir para config_itens.html (manter padrão solicitado)
+    document.addEventListener('login:ok', () => { window.location.href = 'config_itens.html'; });
+  </script>
 </body>
 </html>
+<!-- APP_CHALLENGE/cadastrado.html -->
