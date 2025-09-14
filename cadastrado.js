@@ -38,7 +38,25 @@
     form.addEventListener('submit', async (e) => {
       e.preventDefault(); msg.hidden = true;
       try {
-        const res = await fetch('/api/login', { method: 'POST', body: new FormData(form) });
+        const formData = new FormData(form);
+        // Primeiro verifica se o servidor está online
+        try {
+          const testRes = await fetch('http://127.0.0.1:5000/api/test');
+          if (!testRes.ok) {
+            throw new Error('Servidor não está respondendo');
+          }
+        } catch (error) {
+          throw new Error('Erro: Servidor não está rodando. Execute: python config_itens.py');
+        }
+
+        const res = await fetch('http://127.0.0.1:5000/api/login', { 
+          method: 'POST', 
+          body: formData,
+          credentials: 'include',
+          headers: {
+            'Accept': 'application/json'
+          }
+        });
         const data = await res.json();
         if (!res.ok || !data.ok) { showMsg(data.error || 'Falha no login.', false); return; }
         showMsg('Login realizado com sucesso!', true);

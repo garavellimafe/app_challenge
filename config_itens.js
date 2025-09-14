@@ -1,4 +1,17 @@
 document.addEventListener("DOMContentLoaded", function () {
+    // Verificar se o servidor está rodando
+    fetch('http://127.0.0.1:5000/api/test')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Servidor não está respondendo corretamente');
+            }
+            return response.json();
+        })
+        .catch(error => {
+            console.error('Erro ao verificar servidor:', error);
+            alert('Erro: Servidor não está rodando. Execute: python config_itens.py');
+        });
+
     // ELEMENTOS PRINCIPAIS
     const modal = document.getElementById("interfaceModal");
     const botaoAdicionar = document.getElementById("botaoAdicionar");
@@ -517,6 +530,22 @@ document.addEventListener("DOMContentLoaded", function () {
     // SISTEMA DE SESSÃO PARA MEMÓRIA DA IA
     let sessaoAtual = null;
     
+    // Função para verificar se o servidor está online
+    async function verificarServidor() {
+        try {
+            const response = await fetch('http://127.0.0.1:5000/api/test');
+            if (!response.ok) {
+                throw new Error('Servidor não está respondendo corretamente');
+            }
+            const data = await response.json();
+            console.log('✅ Servidor online:', data);
+            return true;
+        } catch (error) {
+            console.error('❌ Erro ao verificar servidor:', error);
+            return false;
+        }
+    }
+    
     // Gera ou recupera ID de sessão único
     function obterSessaoId() {
         if (!sessaoAtual) {
@@ -563,6 +592,19 @@ document.addEventListener("DOMContentLoaded", function () {
     chatClose?.addEventListener("click", () => {
         chatModal.style.display = "none";
     });
+
+    // Configura os eventos de envio de mensagem
+    chatSend?.addEventListener("click", () => {
+        enviarMensagem();
+    });
+
+    // Adiciona evento de pressionar Enter no input
+    chatInput?.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            enviarMensagem();
+        }
+    });
     
     // Botão para limpar memória da IA
     const btnLimparMemoria = document.getElementById("btnLimparMemoria");
@@ -573,130 +615,145 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    function enviarMensagem() {
+    async function enviarMensagem() {
         const msg = chatInput.value.trim();
         if (!msg) return;
 
+        // Verifica se o servidor está online antes de enviar a mensagem
+        const serverOnline = await verificarServidor();
+        if (!serverOnline) {
+            chatBody.innerHTML += `<div class="msg-ia">Erro: Servidor não está rodando. Execute: python config_itens.py</div>`;
+            chatBody.scrollTop = chatBody.scrollHeight;
+            return;
+        }
+
+        // Adiciona a mensagem do usuário ao chat
         chatBody.innerHTML += `<div class="msg-usuario">${msg}</div>`;
         chatInput.value = "";
         chatBody.scrollTop = chatBody.scrollHeight;
 
+        // Adiciona mensagem de carregamento
         const loadingId = "loading-" + Date.now();
         chatBody.innerHTML += `<div class="msg-ia" id="${loadingId}">Digitando...</div>`;
         chatBody.scrollTop = chatBody.scrollHeight;
 
-        // Coleta os itens atuais e disponíveis para enviar como contexto para a IA
-        const itensAtuais = getItensAtuais();
-        const itensDisponiveis = getItensDisponiveis();
-        
-        console.log("📤 Enviando para IA:", {
-            mensagem: msg,
-            itens_atuais: itensAtuais.length,
-            itens_disponiveis: itensDisponiveis.length,
-            sessao_id: obterSessaoId()
-        });
+        try {
+            // Coleta informações do contexto atual
+            const itensAtuais = getItensAtuais();
+            const itensDisponiveis = getItensDisponiveis();
 
-        // Timeout para a API
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 segundos
+            console.log("📤 Enviando para IA:", {
+                mensagem: msg,
+                itens_atuais: itensAtuais.length,
+                itens_disponiveis: itensDisponiveis.length,
+                sessao_id: obterSessaoId()
+            });
 
-        fetch("http://localhost:3080/api/assistente", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ 
-                mensagem: msg, 
-                itens: itensAtuais,
-                itens_disponiveis: itensDisponiveis,
-                sessao_id: obterSessaoId()  // Inclui ID da sessão
-            }),
-            signal: controller.signal
-        })
-        .then(async (r) => {
-            if (!r.ok) {
-                const err = await r.json();
-                throw new Error(err.erro || "Erro na comunicação com a API.");
+            // Envia a requisição para o servidor com timeout
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 segundos
+
+            const response = await fetch('http://127.0.0.1:5000/api/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    message: msg,
+                    session_id: obterSessaoId(),
+                    context: {
+                        itensAtuais,
+                        itensDisponiveis
+                    }
+                }),
+                signal: controller.signal
+            });
+
+            clearTimeout(timeoutId);
+
+            if (!response.ok) {
+                throw new Error(`Erro na comunicação com o servidor: ${response.status}`);
             }
-            return r.json();
-        })
-        .then((data) => {
-            clearTimeout(timeoutId); // Limpa o timeout se a requisição foi bem-sucedida
-            const loadingDiv = document.getElementById(loadingId);
-            
+
+            const responseData = await response.json();
+
+            // Remove a mensagem de carregamento
+            const loadingMsg = document.getElementById(loadingId);
+            if (loadingMsg) {
+                loadingMsg.remove();
+            }
+
             // Atualiza sessão se recebida do servidor
-            if (data.sessao_id) {
-                sessaoAtual = data.sessao_id;
+            if (responseData.session_id) {
+                sessaoAtual = responseData.session_id;
                 localStorage.setItem('goodwe_chat_session', sessaoAtual);
             }
-            
-            // Exibe a resposta da IA
-            if (data.resposta) {
-                loadingDiv.innerHTML = data.resposta;
-            } else {
-                loadingDiv.remove();
-            }
 
-            // EXECUTA AS AÇÕES RETORNADAS PELA IA (CORREÇÃO PRINCIPAL)
-            if (data.acoes && Array.isArray(data.acoes)) {
-                let acoesExecutadas = 0;
-                let mensagensAcao = [];
-                
-                data.acoes.forEach(acao => {
-                    try {
-                        const sucesso = executarAcao(acao);
-                        if (sucesso) {
-                            acoesExecutadas++;
-                            // Gera mensagem de confirmação específica
-                            switch(acao.funcao) {
-                                case "adicionar_item":
-                                    mensagensAcao.push(`➕ Adicionado: ${acao.argumentos.nome}`);
-                                    break;
-                                case "remover_item":
-                                    mensagensAcao.push(`🗑️ Removido: ${acao.argumentos.nome}`);
-                                    break;
-                                case "atualizar_item":
-                                    let detalhes = [];
-                                    if (acao.argumentos.ativo !== undefined) detalhes.push(acao.argumentos.ativo ? "Ativado" : "Desativado");
-                                    if (acao.argumentos.prioridade !== undefined) detalhes.push(acao.argumentos.prioridade ? "Prioritário" : "Normal");
-                                    mensagensAcao.push(`🔧 Atualizado: ${acao.argumentos.nome_original} (${detalhes.join(", ")})`);
-                                    break;
+            // Adiciona a resposta da IA
+            if (responseData.error) {
+                chatBody.innerHTML += `<div class="msg-ia">Erro: ${responseData.error}</div>`;
+            } else {
+                chatBody.innerHTML += `<div class="msg-ia">${responseData.response}</div>`;
+
+                // EXECUTA AS AÇÕES RETORNADAS PELA IA
+                if (responseData.acoes && Array.isArray(responseData.acoes)) {
+                    let acoesExecutadas = 0;
+                    let mensagensAcao = [];
+                    
+                    responseData.acoes.forEach(acao => {
+                        try {
+                            const sucesso = executarAcao(acao);
+                            if (sucesso) {
+                                acoesExecutadas++;
+                                // Gera mensagem de confirmação específica
+                                switch(acao.funcao) {
+                                    case "adicionar_item":
+                                        mensagensAcao.push(`➕ Adicionado: ${acao.argumentos.nome}`);
+                                        break;
+                                    case "remover_item":
+                                        mensagensAcao.push(`🗑️ Removido: ${acao.argumentos.nome}`);
+                                        break;
+                                    case "atualizar_item":
+                                        let detalhes = [];
+                                        if (acao.argumentos.ativo !== undefined) detalhes.push(acao.argumentos.ativo ? "Ativado" : "Desativado");
+                                        if (acao.argumentos.prioridade !== undefined) detalhes.push(acao.argumentos.prioridade ? "Prioritário" : "Normal");
+                                        mensagensAcao.push(`🔧 Atualizado: ${acao.argumentos.nome_original} (${detalhes.join(", ")})`);
+                                        break;
+                                }
                             }
+                        } catch (error) {
+                            console.error("Erro ao executar ação:", error);
+                            chatBody.innerHTML += `<div class="msg-ia" style="color: red;">❌ Erro ao executar ação: ${error.message}</div>`;
                         }
-                    } catch (error) {
-                        console.error("Erro ao executar ação:", error);
-                        chatBody.innerHTML += `<div class="msg-ia" style="color: red;">❌ Erro ao executar ação: ${error.message}</div>`;
+                    });
+                    
+                    if (acoesExecutadas > 0) {
+                        chatBody.innerHTML += `<div class="msg-ia" style="color: green; font-size: 0.9em; margin-top: 10px;">${mensagensAcao.join('<br>')}</div>`;
                     }
-                });
-                
-                if (acoesExecutadas > 0) {
-                    chatBody.innerHTML += `<div class="msg-ia" style="color: green; font-size: 0.9em; margin-top: 10px;">${mensagensAcao.join('<br>')}</div>`;
                 }
             }
-
-            chatBody.scrollTop = chatBody.scrollHeight;
-        })
-        .catch((err) => {
-            clearTimeout(timeoutId);
-            const loadingDiv = document.getElementById(loadingId);
-            if (loadingDiv) {
+        } catch (error) {
+            // Remove a mensagem de carregamento
+            const loadingMsg = document.getElementById(loadingId);
+            if (loadingMsg) {
                 let mensagemErro = "Erro na comunicação com a IA.";
                 
-                if (err.name === 'AbortError') {
+                if (error.name === 'AbortError') {
                     mensagemErro = "Tempo limite excedido. Tente novamente.";
-                } else if (err.message.includes("Failed to fetch")) {
+                } else if (error.message.includes("Failed to fetch")) {
                     mensagemErro = "Servidor não está rodando. Execute: python config_itens.py";
-                } else if (err.message) {
-                    mensagemErro = err.message;
+                } else {
+                    mensagemErro = error.message;
                 }
                 
-                loadingDiv.innerHTML = `Erro: ${mensagemErro}`;
-                loadingDiv.style.color = "red";
+                loadingMsg.innerHTML = `Erro: ${mensagemErro}`;
+                console.error('Erro ao comunicar com o servidor:', error);
             }
-            chatBody.scrollTop = chatBody.scrollHeight;
-        });
+        }
+
+        // Rola para o final do chat
+        chatBody.scrollTop = chatBody.scrollHeight;
     }
 
-    chatSend?.addEventListener("click", enviarMensagem);
-    chatInput?.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") enviarMensagem();
-    });
 });

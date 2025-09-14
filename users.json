@@ -1,0 +1,9 @@
+[
+  {
+    "nome": "Maria Fernanda Garavelli Dantas",
+    "username": "54835265890",
+    "cpf": "54835265890",
+    "password_hash": "scrypt:32768:8:1$UtfRBD2QzLVwMRRS$24efb9c142d5f486386e6ec0d7860af381717f3f3c2e5d0da402d6efb310278b62b1856cf0b89614dc108518ed1305f5f372230854d4bdabe2282d31bbe6c458",
+    "created_at": "2025-09-14T00:48:51.756577Z"
+  }
+]

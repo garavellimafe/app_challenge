@@ -39,7 +39,15 @@
       e.preventDefault(); msg.hidden = true;
 
       try {
-        const res = await fetch('/api/register', { method: 'POST', body: new FormData(form) });
+        const formData = new FormData(form);
+        const res = await fetch('http://127.0.0.1:5000/api/register', { 
+          method: 'POST', 
+          body: formData,
+          credentials: 'include',
+          headers: {
+            'Accept': 'application/json',
+          }
+        });
         const data = await res.json();
         if (!res.ok || !data.ok) { showMsg(data.error || 'Erro ao cadastrar.', false); return; }
 
