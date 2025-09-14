@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
   <meta charset="utf-8" />
-  <title>Cadastro • MeuSite</title>
+  <title>Cadastro • GoodWe</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <!-- Use o MESMO CSS das páginas pginicial/config_itens -->
   <link rel="stylesheet" href="cadastro.css" />
@@ -30,18 +30,23 @@
       <form id="form-cadastro" class="form">
         <div class="campo">
           <label class="rotulo">Nome completo</label>
-          <input type="text" name="nome" class="entrada" required />
+          <input type="text" name="nome" class="entrada" required minlength="2" placeholder="Digite seu nome completo" />
+        </div>
+
+        <div class="campo">
+          <label class="rotulo">E-mail</label>
+          <input type="email" name="email" class="entrada" required placeholder="Digite seu e-mail" />
         </div>
 
         <div class="campo">
           <label class="rotulo">Nome de usuário <span class="muted">(opcional)</span></label>
-          <input type="text" name="username" class="entrada" placeholder="ex.: rogerio_filho" minlength="3" maxlength="20" />
+          <input type="text" name="username" class="entrada" placeholder="ex.: rogerio_filho" minlength="3" maxlength="20" pattern="[a-zA-Z0-9_]+" />
           <small class="muted">Se não preencher, o sistema cria um a partir do seu nome.</small>
         </div>
 
         <div class="campo">
           <label class="rotulo">CPF (somente números)</label>
-          <input type="text" name="cpf" class="entrada" pattern="\d{11}" minlength="11" maxlength="11" required />
+          <input type="text" name="cpf" class="entrada" pattern="\d{11}" minlength="11" maxlength="11" required placeholder="Digite apenas números" />
         </div>
 
         <div class="campo">
@@ -50,7 +55,7 @@
             <input type="password" name="senha" id="pwd-register" class="entrada" minlength="4" placeholder="Deixe em branco para gerar automaticamente" />
             <button type="button" class="btn ghost password-toggle" data-target="#pwd-register">Mostrar</button>
           </div>
-          <label class="check" style="display:inline-flex;align-items:center;gap:8px;margin-top:6px;color:#555;">
+          <label class="check">
             <input type="checkbox" id="autoPwd" name="auto_pwd" />
             Gerar senha automaticamente
           </label>

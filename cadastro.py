@@ -12,20 +12,30 @@ from io import BytesIO
 def register_user(data, users, base_dir):
     """Handle user registration logic"""
     nome = (data.get("nome") or "").strip()
+    email = (data.get("email") or "").strip()
     username = (data.get("username") or "").strip()
     cpf = (data.get("cpf") or "").strip()
     senha = data.get("senha") or ""
     auto_pwd = (data.get("auto_pwd") == "on") or (str(data.get("auto_pwd")).lower() == "true")
 
-    if not nome:
-        return jsonify({"ok": False, "error": "Nome é obrigatório."}), 400
+    if not email:
+        return jsonify({"ok": False, "error": "E-mail é obrigatório."}), 400
+    
+    email_re = re.compile(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
+    if not email_re.match(email):
+        return jsonify({"ok": False, "error": "E-mail inválido."}), 400
+        
+    if find_user_by_email(users, email):
+        return jsonify({"ok": False, "error": "E-mail já cadastrado."}), 409
     
     cpf_re = re.compile(r"^\d{11}$")
     if not cpf_re.match(cpf):
         return jsonify({"ok": False, "error": "CPF deve ter 11 dígitos numéricos."}), 400
 
     if not username:
-        username = generate_unique_username(users, nome)
+        # If no username provided, generate one from name or email
+        base = nome if nome else email.split('@')[0]
+        username = generate_unique_username(users, base)
     elif not re.compile(r"^[a-zA-Z0-9_.-]{3,20}$").match(username):
         return jsonify({"ok": False, "error": "Nome de usuário inválido."}), 400
 
@@ -39,6 +49,7 @@ def register_user(data, users, base_dir):
 
     user = {
         "nome": nome,
+        "email": email,
         "username": username,
         "cpf": cpf,
         "password_hash": generate_password_hash(senha),
@@ -47,7 +58,13 @@ def register_user(data, users, base_dir):
     users.append(user)
 
     # Generate credentials file content
-    txt_content = make_txt_content(nome, username, cpf, senha)
+    txt_content = make_txt_content(
+        nome or "Usuário", # Use "Usuário" if nome is empty
+        email,
+        username,
+        cpf,
+        senha
+    )
     filename = f"{username}_credenciais.txt"
     downloads_dir = os.path.join(base_dir, "downloads")
     os.makedirs(downloads_dir, exist_ok=True)
@@ -94,7 +111,7 @@ def generate_password(length: int = 10) -> str:
     secrets.SystemRandom().shuffle(pwd)
     return "".join(pwd)
 
-def make_txt_content(nome: str, username: str, cpf: str, senha: str) -> str:
+def make_txt_content(nome: str, email: str, username: str, cpf: str, senha: str) -> str:
     """Generate the content for the credentials text file"""
     largura = 60
     titulo = f"Registro de {username}"
