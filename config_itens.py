@@ -184,11 +184,27 @@ def cadastro():
         data = request.get_json()
         logger.debug(f"Received registration data: {data}")
         
-        # Only these fields are required
-        nome = data.get('nome', '').strip()
-        email = data.get('email', '').strip()
-        cpf = data.get('cpf', '').strip()
-        senha = data.get('senha', '')
+        # Get and validate required fields
+        required_fields = {
+            'nome': data.get('nome', '').strip(),
+            'email': data.get('email', '').strip(),
+            'cpf': data.get('cpf', '').strip(),
+            'senha': data.get('senha', '')
+        }
+        
+        # Check for missing required fields
+        missing_fields = [field for field, value in required_fields.items() if not value]
+        if missing_fields:
+            return jsonify({
+                "ok": False,
+                "error": f"Por favor, preencha os campos obrigatórios: {', '.join(missing_fields)}"
+            }), 400
+            
+        # Extract values for further processing
+        nome = required_fields['nome']
+        email = required_fields['email']
+        cpf = required_fields['cpf']
+        senha = required_fields['senha']
         
         # Debug log the received fields
         logger.debug(f"Processed fields: nome={nome}, email={email}, cpf={cpf}, senha={'*' * len(senha) if senha else 'empty'}")

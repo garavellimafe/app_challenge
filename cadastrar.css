@@ -1,6 +1,11 @@
-/* APP_CHALLENGE/cadastro.css */
+/* APP_CHALLENGE/cadastrar.css */
 /* Reusa o tema GoodWe da página de cadastrado */
 @import url("./cadastrado.css");
+
+/* Define cor de fundo vermelha específica para esta página */
+body {
+  background-color: #c62828; /* Cor vermelha GoodWe */
+}
 
 /* Ajustes específicos do formulário de cadastro */
 .titulo { 

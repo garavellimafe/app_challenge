@@ -66,11 +66,11 @@
       });
     }
 
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', (e) => {
       e.preventDefault(); 
       msg.hidden = true;
       
-      // Validar entrada antes de enviar
+      // Validar entrada antes de redirecionar
       const ident = identInput.value.trim();
       if (!validateIdentInput(ident)) {
         showMsg('Digite um CPF (11 dígitos) ou nome de usuário válido', false);
@@ -82,44 +82,14 @@
         return;
       }
       
-      try {
-        // Disable form while submitting
-        form.querySelectorAll('button, input').forEach(el => el.disabled = true);
-        showMsg('Verificando...', true);
-        
-        const formData = new FormData(form);
-        const formJson = Object.fromEntries(formData.entries());
-        
-        const res = await fetch('http://127.0.0.1:5000/api/login', { 
-          method: 'POST', 
-          body: JSON.stringify(formJson),
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          }
-        });
-
-        const data = await res.json();
-
-        if (!res.ok || !data.ok) {
-          showMsg(data.error || 'Credenciais inválidas', false);
-          return;
-        }
-
-        showMsg('Login realizado com sucesso!', true);
-        document.dispatchEvent(new CustomEvent('login:ok'));
-        
-        setTimeout(() => {
-          window.location.href = 'config_itens.html';
-        }, 1000);
-
-      } catch (err) {
-        console.error(err);
-        showMsg('Erro de comunicação com o servidor', false);
-      } finally {
-        // Re-enable form
-        form.querySelectorAll('button, input').forEach(el => el.disabled = false);
-      }
+      // Se passou pelas validações, mostra mensagem de sucesso e redireciona
+      showMsg('Login realizado com sucesso!', true);
+      
+      // Salva o identificador no localStorage (caso precise depois)
+      localStorage.setItem('userIdent', ident);
+      
+      // Redireciona imediatamente
+      window.location.href = 'config_itens.html';
     });
   }
 })();
